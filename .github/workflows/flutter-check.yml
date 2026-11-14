@@ -1,0 +1,36 @@
+name: Alikuryer Android build and checks
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  flutter-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate fresh Flutter platform scaffold
+        working-directory: apps/customer
+        run: flutter create --project-name alikuryer_customer --platforms android,web .
+      - name: Install dependencies
+        working-directory: apps/customer
+        run: flutter pub get
+      - name: Static analysis
+        working-directory: apps/customer
+        run: flutter analyze --no-fatal-infos
+      - name: Build Android APK
+        working-directory: apps/customer
+        run: |
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }} \
+            --dart-define=SUPABASE_PUBLISHABLE_KEY=${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: alikuryer-debug-apk
+          path: apps/customer/build/app/outputs/flutter-apk/app-debug.apk
