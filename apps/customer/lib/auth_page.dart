@@ -12,7 +12,7 @@ class _AuthPageState extends State<AuthPage> {
   bool busy = false;
   String? message;
   Future<void> submit({required bool signup}) async {
-    if (!Supabase.isInitialized) {
+    if (!Supabase.instance.isInitialized) {
       setState(() => message = 'Supabase ulanmagan');
       return;
     }
