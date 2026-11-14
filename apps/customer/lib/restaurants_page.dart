@@ -9,7 +9,7 @@ class RestaurantsPage extends StatefulWidget {
 class _RestaurantsPageState extends State<RestaurantsPage> {
   String query = '';
   Future<List<Map<String, dynamic>>> fetchRestaurants() async {
-    if (!Supabase.isInitialized) return [];
+    if (!Supabase.instance.isInitialized) return [];
     final result = await Supabase.instance.client.from('restaurants')
       .select('id,name,description,address_line').eq('is_active', true).order('name').limit(100);
     return List<Map<String, dynamic>>.from(result);
