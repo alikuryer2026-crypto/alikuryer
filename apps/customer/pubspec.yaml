@@ -1,0 +1,12 @@
+name: alikuryer_customer
+description: Original Alikuryer customer application.
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  supabase_flutter: ^2.0.0
+flutter:
+  uses-material-design: true
