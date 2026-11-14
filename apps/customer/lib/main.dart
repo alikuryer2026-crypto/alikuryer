@@ -1,3 +1,6 @@
+import 'auth_page.dart';
+import 'addresses_page.dart';
+import 'restaurants_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -92,6 +95,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       ]),
     ),
     const SizedBox(height: 22),
+    TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RestaurantsPage())), icon: const Icon(Icons.storefront), label: const Text('Restoranlarni ko‘rish')),
     const Text('Taomlar', style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
     FutureBuilder<List<Map<String, dynamic>>>(
       future: loadMenu(),
@@ -140,12 +144,24 @@ class _CustomerHomeState extends State<CustomerHome> {
     const Text('Buyurtma berish server funksiyalari qo‘shilgach yoqiladi.'),
   ]);
 
-  Widget profilePage() => const Center(child: Column(
+  Widget profilePage() => Center(child: Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Icon(Icons.person_outline, size: 70),
-      Text('Mijoz profili', style: TextStyle(fontSize: 24)),
-      Text('Kirish va ro‘yxatdan o‘tish keyingi bosqichda.'),
+      const Icon(Icons.person_outline, size: 70),
+      const Text('Mijoz profili', style: TextStyle(fontSize: 24)),
+      const SizedBox(height: 12),
+      FilledButton(onPressed: () async {
+        await Navigator.push(context, MaterialPageRoute(builder: (_) => const AuthPage()));
+        if (mounted) setState(() {});
+      }, child: const Text('Kirish / Ro‘yxatdan o‘tish')),
+      OutlinedButton(onPressed: () => Navigator.push(context,
+        MaterialPageRoute(builder: (_) => const AddressesPage())),
+        child: const Text('Mening manzillarim')),
+      if (Supabase.isInitialized && Supabase.instance.client.auth.currentUser != null)
+        TextButton(onPressed: () async {
+          await Supabase.instance.client.auth.signOut();
+          if (mounted) setState(() {});
+        }, child: const Text('Chiqish')),
     ],
   ));
 }
