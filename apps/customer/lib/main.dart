@@ -46,7 +46,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   });
 
   Future<List<Map<String, dynamic>>> loadMenu() async {
-    if (!Supabase.isInitialized) return [];
+    if (!Supabase.instance.isInitialized) return [];
     final result = await Supabase.instance.client
         .from('menu_items')
         .select('id,name,price_uzs')
@@ -157,7 +157,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       OutlinedButton(onPressed: () => Navigator.push(context,
         MaterialPageRoute(builder: (_) => const AddressesPage())),
         child: const Text('Mening manzillarim')),
-      if (Supabase.isInitialized && Supabase.instance.client.auth.currentUser != null)
+      if (Supabase.instance.isInitialized && Supabase.instance.client.auth.currentUser != null)
         TextButton(onPressed: () async {
           await Supabase.instance.client.auth.signOut();
           if (mounted) setState(() {});
