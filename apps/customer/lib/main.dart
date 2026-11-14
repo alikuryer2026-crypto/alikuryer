@@ -71,59 +71,157 @@ class _CustomerHomeState extends State<CustomerHome> {
     ),
   );
 
-  Widget catalog() => ListView(padding: const EdgeInsets.all(16), children: [
-    const Text('Mazali taomlar — tez yetkazib berish',
-      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-    const SizedBox(height: 16),
-    TextField(
-      onChanged: (v) => setState(() => query = v.toLowerCase()),
-      decoration: const InputDecoration(
-        prefixIcon: Icon(Icons.search), hintText: 'Taom qidirish',
-        border: OutlineInputBorder(),
+  Widget catalog() => Container(
+    color: const Color(0xFFF8F8FA),
+    child: ListView(padding: EdgeInsets.zero, children: [
+      Container(
+        padding: const EdgeInsets.fromLTRB(18, 12, 18, 22),
+        decoration: const BoxDecoration(
+          color: Color(0xFFE50914),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Row(children: [
+            Icon(Icons.location_on, color: Colors.white, size: 22),
+            SizedBox(width: 8),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Manzilingiz', style: TextStyle(color: Colors.white70, fontSize: 12)),
+              Text('Yetkazib berish manzilini tanlang',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+            ])),
+            Icon(Icons.keyboard_arrow_down, color: Colors.white),
+          ]),
+          const SizedBox(height: 16),
+          TextField(
+            onChanged: (value) => setState(() => query = value.toLowerCase()),
+            decoration: InputDecoration(
+              hintText: 'Taom yoki restoran qidirish...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: const Icon(Icons.tune),
+              filled: true, fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(vertical: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+            ),
+          ),
+        ]),
       ),
-    ),
-    const SizedBox(height: 16),
-    Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF191919), borderRadius: BorderRadius.circular(18)),
-      child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('ALIKURYER', style: TextStyle(color: Colors.white70)),
-        SizedBox(height: 8),
-        Text('Sevimli taomlaringiz bir joyda',
-          style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-      ]),
-    ),
-    const SizedBox(height: 22),
-    TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RestaurantsPage())), icon: const Icon(Icons.storefront), label: const Text('Restoranlarni ko‘rish')),
-    const Text('Taomlar', style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-    FutureBuilder<List<Map<String, dynamic>>>(
-      future: loadMenu(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          if (snapshot.hasError) return const Text('Taomlarni yuklashda xatolik');
-          return const Center(child: CircularProgressIndicator());
-        }
-        final items = snapshot.data!.where((item) =>
-          item['name'].toString().toLowerCase().contains(query)).toList();
-        if (items.isEmpty) return const Padding(
-          padding: EdgeInsets.all(20),
-          child: Text('Hozircha taomlar mavjud emas.'),
-        );
-        return Column(children: items.map((item) {
-          final name = item['name'].toString();
-          final price = (item['price_uzs'] as num).round();
-          return Card(child: ListTile(
-            leading: const Icon(Icons.restaurant, color: Color(0xFFE21D2B)),
-            title: Text(name),
-            subtitle: Text('$price so‘m'),
-            trailing: IconButton.filled(
-              onPressed: () => add(name, price), icon: const Icon(Icons.add)),
-          ));
-        }).toList());
-      },
-    ),
-  ]);
+      Padding(padding: const EdgeInsets.all(16), child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            height: 166, width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFE50914), Color(0xFF8F0710), Color(0xFF191919)]),
+            ),
+            child: Stack(children: [
+              const Positioned(right: -10, bottom: -12, child: Icon(
+                Icons.local_pizza, size: 165, color: Color(0xFFFFB13D))),
+              Positioned(left: 18, top: 17, right: 125, child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('AKSIYA!', style: TextStyle(color: Colors.white,
+                    fontSize: 16, fontWeight: FontWeight.w900)),
+                  const SizedBox(height: 5),
+                  const Text('Pitsalarga -30%', style: TextStyle(color: Colors.white,
+                    fontSize: 24, fontWeight: FontWeight.w900)),
+                  const SizedBox(height: 12),
+                  FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.white, foregroundColor: const Color(0xFFE50914)),
+                    onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const RestaurantsPage())),
+                    child: const Text('Restoranlarni ko‘rish'),
+                  ),
+                ],
+              )),
+            ]),
+          ),
+          const SizedBox(height: 24),
+          const Text('Nima buyurtma qilamiz?', style: TextStyle(
+            fontSize: 21, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 14),
+          SizedBox(height: 102, child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: const [
+              _FoodCategory(icon: Icons.local_pizza, title: 'Pitsa'),
+              _FoodCategory(icon: Icons.lunch_dining, title: 'Burger'),
+              _FoodCategory(icon: Icons.kebab_dining, title: 'Lavash'),
+              _FoodCategory(icon: Icons.bakery_dining, title: 'Somsa'),
+              _FoodCategory(icon: Icons.ramen_dining, title: 'Boshqa'),
+            ],
+          )),
+          const SizedBox(height: 20),
+          Row(children: [
+            const Expanded(child: Text('Mashhur restoranlar', style: TextStyle(
+              fontSize: 21, fontWeight: FontWeight.w800))),
+            TextButton(onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const RestaurantsPage())),
+              child: const Text('Hammasi')),
+          ]),
+          const SizedBox(height: 6),
+          GestureDetector(
+            onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const RestaurantsPage())),
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(color: Colors.white,
+                borderRadius: BorderRadius.circular(18)),
+              child: const Row(children: [
+                CircleAvatar(radius: 30, backgroundColor: Color(0xFFFFE5E5),
+                  child: Icon(Icons.storefront, size: 32, color: Color(0xFFE50914))),
+                SizedBox(width: 14),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Restoranlarni kashf eting', style: TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w800)),
+                    SizedBox(height: 4),
+                    Text('Yaqin restoranlar va taomlar'),
+                  ])),
+                Icon(Icons.chevron_right),
+              ]),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text('Taomlar', style: TextStyle(
+            fontSize: 21, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 12),
+          FutureBuilder<List<Map<String, dynamic>>>(
+            future: loadMenu(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Padding(padding: EdgeInsets.all(20),
+                  child: Text('Taomlarni yuklashda xatolik'));
+              }
+              if (!snapshot.hasData) return const Center(
+                child: CircularProgressIndicator());
+              final items = snapshot.data!.where((item) =>
+                item['name'].toString().toLowerCase().contains(query)).toList();
+              if (items.isEmpty) return const Padding(
+                padding: EdgeInsets.all(20),
+                child: Text('Hozircha taomlar mavjud emas.'));
+              return Column(children: items.map((item) {
+                final name = item['name'].toString();
+                final price = (item['price_uzs'] as num).round();
+                return Card(color: Colors.white, elevation: 0,
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundColor: Color(0xFFFFEEEE),
+                      child: Icon(Icons.restaurant, color: Color(0xFFE50914))),
+                    title: Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    subtitle: Text('$price so‘m'),
+                    trailing: IconButton.filled(
+                      onPressed: () => add(name, price),
+                      icon: const Icon(Icons.add)),
+                  ));
+              }).toList());
+            },
+          ),
+        ],
+      )),
+    ]),
+  );
 
   Widget cartPage() => ListView(padding: const EdgeInsets.all(16), children: [
     const Text('Savatcha', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -164,4 +262,20 @@ class _CustomerHomeState extends State<CustomerHome> {
         }, child: const Text('Chiqish')),
     ],
   ));
+}
+
+class _FoodCategory extends StatelessWidget {
+  const _FoodCategory({required this.icon, required this.title});
+  final IconData icon;
+  final String title;
+  @override
+  Widget build(BuildContext context) => SizedBox(width: 83,
+    child: Column(children: [
+      Container(width: 62, height: 62,
+        decoration: BoxDecoration(color: Colors.white,
+          borderRadius: BorderRadius.circular(18)),
+        child: Icon(icon, color: const Color(0xFFE50914), size: 32)),
+      const SizedBox(height: 8),
+      Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+    ]));
 }
