@@ -1,0 +1,26 @@
+/* V16: consistent navigation, touch targets and accessible layouts */
+:root{--ak-shadow:0 8px 28px #17171c0c}
+.bottom{border-top:1px solid #ededf0}
+.bottom button{min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:12px}
+.bottom button b{font-family:system-ui,sans-serif;font-size:21px;line-height:1.1;font-weight:500}
+.bottom button.active{background:#fff1f2;color:#d50017}
+.ak-v16-note{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #f0e8e8;padding:11px 13px;border-radius:13px;font-size:12px;color:#69696e;margin:12px 0}
+.ak-v16-note strong{color:#25252b}
+.ak-v15-food-foot button,.ak-v15-tabs button,.ak-v15-banner button,.ak-address button{min-height:44px}
+.ak-v15-food img{display:block;cursor:pointer}
+.ak-v15-food:focus-within{outline:2px solid #e50914;outline-offset:2px}
+.ak-v15-drawer-actions button:disabled{opacity:.45;cursor:not-allowed}
+.ak-v15-drawer-inner{overscroll-behavior:contain}
+.ak-v15-sheet .primary{min-height:52px}
+.ak-v15-food-info h3{line-height:1.3;min-height:2.5em}
+#home .promo{box-shadow:var(--ak-shadow)}
+#home .promo strong{letter-spacing:-.6px}
+@media(max-width:650px){
+ .bottom{padding-bottom:max(7px,env(safe-area-inset-bottom))}
+ .bottom button{min-height:50px}
+ .ak-v15-drawer-inner{max-height:85dvh}
+ .ak-v15-info{margin-top:-30px}
+ .ak-v15-tags{gap:6px}
+ .ak-v15-tags span{font-size:11px}
+}
+@media(max-width:390px){.bottom button{font-size:10px}.bottom button b{font-size:20px}}
