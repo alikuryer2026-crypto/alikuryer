@@ -639,6 +639,53 @@ class _CustomerHomeState extends State<CustomerHome> {
         IconButton(onPressed: () => openExtra('edit'),
           icon: const Icon(Icons.edit_outlined, color: Colors.white)),
       ])),
+    Padding(padding: const EdgeInsets.fromLTRB(16, 18, 16, 4),
+      child: Row(children: [
+        Expanded(child: Container(padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(color: Colors.white,
+            borderRadius: BorderRadius.circular(18)),
+          child: Column(children: [
+            const Icon(Icons.account_balance_wallet_rounded, color: red, size: 27),
+            const SizedBox(height: 6),
+            const Text('50 000 so‘m', style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w900)),
+            const Text('Demo balans', style: TextStyle(
+              fontSize: 11, color: Colors.black54)),
+          ]))),
+        const SizedBox(width: 10),
+        Expanded(child: Container(padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(color: Colors.white,
+            borderRadius: BorderRadius.circular(18)),
+          child: Column(children: [
+            const Icon(Icons.stars_rounded, color: red, size: 27),
+            const SizedBox(height: 6),
+            const Text('1 250', style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w900)),
+            const Text('Demo ballar', style: TextStyle(
+              fontSize: 11, color: Colors.black54)),
+          ]))),
+      ])),
+    Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+      child: Align(alignment: Alignment.centerLeft,
+        child: Text('Mening buyurtmalarim', style: TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w900)))),
+    Padding(padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: InkWell(onTap: () => go(2), borderRadius: BorderRadius.circular(17),
+        child: Container(padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(color: Colors.white,
+            borderRadius: BorderRadius.circular(17)),
+          child: Row(children: [
+            const Icon(Icons.receipt_long_rounded, color: red, size: 30),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Text(orders.isEmpty ? 'Buyurtmalar hali yo‘q' : '${orders.length} ta sinov buyurtmasi',
+                style: const TextStyle(fontWeight: FontWeight.w800)),
+              const Text('Buyurtmalar tarixini ko‘rish',
+                style: TextStyle(fontSize: 12, color: Colors.black54)),
+            ])),
+            const Icon(Icons.chevron_right, color: red),
+          ])))),
     Padding(padding: const EdgeInsets.all(16), child: Column(children: [
       Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
         decoration: BoxDecoration(color: Colors.white,
