@@ -280,9 +280,7 @@ class _CustomerHomeState extends State<CustomerHome> {
             decoration: BoxDecoration(shape: BoxShape.circle,
               color: Colors.white.withValues(alpha: .08)))),
           Positioned(right: 1, bottom: 6, child: SizedBox(width: 152, height: 164,
-            child: Image.asset('assets/courier.png', fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Icon(Icons.delivery_dining,
-                size: 90, color: Colors.white)))),
+            child: const Icon(Icons.delivery_dining, size: 90, color: Colors.white))),
           Padding(padding: const EdgeInsets.all(21),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('ALIKURYER', style: TextStyle(color: Colors.white70,
