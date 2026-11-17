@@ -748,22 +748,40 @@ class _CustomerHomeState extends State<CustomerHome> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(backgroundColor: red, foregroundColor: Colors.white,
-      title: const Text('Alikuryer', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w900, color: Colors.white)), actions: [
-      IconButton(tooltip: 'Savatcha', onPressed: () => go(1),
-        icon: Badge(isLabelVisible: totalItems > 0, label: Text('$totalItems'),
-          child: const Icon(Icons.shopping_bag_outlined))),
-    ]),
+    appBar: AppBar(
+      backgroundColor: tab == 0 || tab == 3 ? Colors.white : red,
+      foregroundColor: tab == 0 || tab == 3 ? ink : Colors.white,
+      titleSpacing: 14,
+      title: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(Icons.delivery_dining_rounded,
+          color: tab == 0 || tab == 3 ? red : Colors.white, size: 30),
+        const SizedBox(width: 6),
+        Text('Alikuryer', style: TextStyle(
+          fontSize: 23, fontStyle: FontStyle.italic, fontWeight: FontWeight.w900,
+          color: tab == 0 || tab == 3 ? red : Colors.white)),
+      ]),
+      actions: [
+        IconButton(tooltip: 'Sevimlilar', onPressed: () => go(3),
+          icon: const Icon(Icons.favorite_border)),
+        IconButton(tooltip: 'Savatcha', onPressed: () => go(1),
+          icon: Badge(isLabelVisible: totalItems > 0, label: Text('$totalItems'),
+            child: const Icon(Icons.shopping_bag_outlined))),
+      ],
+    ),
     body: !loaded ? const Center(child: CircularProgressIndicator()) : IndexedStack(
       index: tab, children: [homeView(), cartView(), ordersView(), favoritesView(), profileView()]),
-    bottomNavigationBar: NavigationBar(backgroundColor: Colors.white, indicatorColor: AliPalette.softRed,
+    bottomNavigationBar: NavigationBar(
+      height: 72,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      backgroundColor: Colors.white,
+      indicatorColor: AliPalette.softRed,
       selectedIndex: tab, onDestinationSelected: go,
       destinations: const [
-        NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Asosiy'),
-        NavigationDestination(icon: Icon(Icons.shopping_bag_outlined), selectedIcon: Icon(Icons.shopping_bag), label: 'Savatcha'),
-        NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'Buyurtmalar'),
-        NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Sevimlilar'),
-        NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profil'),
+        NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home, color: red), label: 'Bosh sahifa'),
+        NavigationDestination(icon: Icon(Icons.shopping_cart_outlined), selectedIcon: Icon(Icons.shopping_cart, color: red), label: 'Savatcha'),
+        NavigationDestination(icon: Icon(Icons.shopping_bag_outlined), selectedIcon: Icon(Icons.shopping_bag, color: red), label: 'Buyurtmalar'),
+        NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite, color: red), label: 'Sevimlilar'),
+        NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person, color: red), label: 'Profil'),
       ]),
   );
 }
