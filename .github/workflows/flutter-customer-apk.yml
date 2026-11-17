@@ -7,7 +7,7 @@ on:
       - 'flutter_customer/**'
       - '.github/workflows/flutter-customer-apk.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   android:
     runs-on: ubuntu-latest
@@ -39,3 +39,11 @@ jobs:
           name: alikuryer-customer-debug-apk
           path: flutter_customer/build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
+      - name: Publish one-tap APK download to GitHub Releases
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp flutter_customer/build/app/outputs/flutter-apk/app-debug.apk alikuryer-customer.apk
+          gh release view customer-preview >/dev/null 2>&1 || gh release create customer-preview --title "ALIKURYER Android sinov ilovasi" --notes "Android debug APK: test uchun. Haqiqiy buyurtma va to'lovlar hali ulanmagan." --prerelease --target main
+          gh release upload customer-preview alikuryer-customer.apk --clobber
