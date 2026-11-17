@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
+import 'customer_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -132,6 +133,22 @@ class _CustomerHomeState extends State<CustomerHome> {
   }
 
   void go(int next) => setState(() { tab = next; if (next != 0) restaurant = ''; });
+  void openExtra(String route) {
+    final Widget page = switch (route) {
+      'hub' => AliHubScreen(open: openExtra),
+      'edit' => const AliEditProfileScreen(),
+      'address' => const AliAddressScreen(),
+      'payment' => const AliPaymentScreen(),
+      'tracking' => const AliTrackingScreen(),
+      'accepted' => const AliTrackingScreen(accepted: true),
+      'favorites' => const AliFavoritesScreen(),
+      'support' => const AliSupportScreen(),
+      'wallet' => const AliWalletScreen(),
+      _ => const AliSupportScreen(),
+    };
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
   void snack(String message) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 
   Widget photo(String url, {double height = 145}) => Image.network(
@@ -350,6 +367,21 @@ class _CustomerHomeState extends State<CustomerHome> {
 
   Widget profileView() => ListView(padding: const EdgeInsets.all(16), children: [
     heading('Mening profilim'),
+    Wrap(spacing: 9, runSpacing: 9, children: [
+      ActionChip(avatar: const Icon(Icons.dashboard_outlined, color: red),
+        label: const Text('Mijoz kabineti'), onPressed: () => openExtra('hub')),
+      ActionChip(avatar: const Icon(Icons.favorite_outline, color: red),
+        label: const Text('Sevimlilar'), onPressed: () => openExtra('favorites')),
+      ActionChip(avatar: const Icon(Icons.location_on_outlined, color: red),
+        label: const Text('Manzillar'), onPressed: () => openExtra('address')),
+      ActionChip(avatar: const Icon(Icons.credit_card, color: red),
+        label: const Text('To‘lov'), onPressed: () => openExtra('payment')),
+      ActionChip(avatar: const Icon(Icons.route, color: red),
+        label: const Text('Kuzatish'), onPressed: () => openExtra('tracking')),
+      ActionChip(avatar: const Icon(Icons.account_balance_wallet_outlined, color: red),
+        label: const Text('Hamyon'), onPressed: () => openExtra('wallet')),
+    ]),
+    const SizedBox(height: 14),
     Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(18)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
