@@ -47,7 +47,7 @@ class AliKuryerApp extends StatelessWidget {
   const AliKuryerApp({super.key});
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'ALI KURYER',
+    title: 'Alikuryer',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       useMaterial3: true,
@@ -567,7 +567,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   ]);
 
   void checkout() {
-    if (address.trim().isEmpty) { snack('Avval Profil bo‘limida manzilni saqlang'); go(3); return; }
+    if (address.trim().isEmpty) { snack('Avval yetkazish manzilini kiriting'); editDeliveryAddress(); return; }
     showDialog<void>(context: context, builder: (ctx) => AlertDialog(
       title: const Text('Sinov buyurtmasi'),
       content: Text('Manzil: $address\nJami: ${money(subtotal + delivery)}\n\nBu buyurtma serverga yuborilmaydi.'),
@@ -618,6 +618,31 @@ class _CustomerHomeState extends State<CustomerHome> {
           icon: const Icon(Icons.route), label: const Text('Kuzatish oynasi (demo)')),
       ]))),
   ]);
+
+  Widget favoritesView() {
+    final liked = foods.where((f) => favorites.contains(f.id)).toList();
+    return ListView(padding: const EdgeInsets.all(16), children: [
+      heading('Sevimlilar', subtitle: 'Yoqtirgan taomlaringiz shu yerda'),
+      if (liked.isEmpty)
+        Container(padding: const EdgeInsets.symmetric(vertical: 58, horizontal: 20),
+          decoration: BoxDecoration(color: Colors.white,
+            borderRadius: BorderRadius.circular(20)),
+          child: Column(children: [
+            const Icon(Icons.favorite_border_rounded, color: red, size: 68),
+            const SizedBox(height: 15),
+            const Text('Sevimlilar hozircha bo‘sh',
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+            const SizedBox(height: 8),
+            const Text('Taom yonidagi yurakchani bosib saqlang',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.black54)),
+            const SizedBox(height: 18),
+            FilledButton(onPressed: () => go(0),
+              child: const Text('Taomlarni ko‘rish')),
+          ])),
+      if (liked.isNotEmpty) foodGrid(liked),
+    ]);
+  }
 
   Widget profileView() => ListView(padding: EdgeInsets.zero, children: [
     Container(height: 130, padding: const EdgeInsets.all(23),
@@ -730,13 +755,14 @@ class _CustomerHomeState extends State<CustomerHome> {
           child: const Icon(Icons.shopping_bag_outlined))),
     ]),
     body: !loaded ? const Center(child: CircularProgressIndicator()) : IndexedStack(
-      index: tab, children: [homeView(), cartView(), ordersView(), profileView()]),
+      index: tab, children: [homeView(), cartView(), ordersView(), favoritesView(), profileView()]),
     bottomNavigationBar: NavigationBar(backgroundColor: Colors.white, indicatorColor: AliPalette.softRed,
       selectedIndex: tab, onDestinationSelected: go,
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Asosiy'),
         NavigationDestination(icon: Icon(Icons.shopping_bag_outlined), selectedIcon: Icon(Icons.shopping_bag), label: 'Savatcha'),
         NavigationDestination(icon: Icon(Icons.receipt_long_outlined), selectedIcon: Icon(Icons.receipt_long), label: 'Buyurtmalar'),
+        NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Sevimlilar'),
         NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profil'),
       ]),
   );
