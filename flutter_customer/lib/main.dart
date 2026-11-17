@@ -406,45 +406,59 @@ class _CustomerHomeState extends State<CustomerHome> {
       ]))),
   ]);
 
-  Widget profileView() => ListView(padding: const EdgeInsets.all(16), children: [
-    heading('Mening profilim'),
-    Wrap(spacing: 9, runSpacing: 9, children: [
-      ActionChip(avatar: const Icon(Icons.dashboard_outlined, color: red),
-        label: const Text('Mijoz kabineti'), onPressed: () => openExtra('hub')),
-      ActionChip(avatar: const Icon(Icons.favorite_outline, color: red),
-        label: const Text('Sevimlilar'), onPressed: () => openExtra('favorites')),
-      ActionChip(avatar: const Icon(Icons.location_on_outlined, color: red),
-        label: const Text('Manzillar'), onPressed: () => openExtra('address')),
-      ActionChip(avatar: const Icon(Icons.credit_card, color: red),
-        label: const Text('To‘lov'), onPressed: () => openExtra('payment')),
-      ActionChip(avatar: const Icon(Icons.route, color: red),
-        label: const Text('Kuzatish'), onPressed: () => openExtra('tracking')),
-      ActionChip(avatar: const Icon(Icons.account_balance_wallet_outlined, color: red),
-        label: const Text('Hamyon'), onPressed: () => openExtra('wallet')),
-    ]),
-    const SizedBox(height: 14),
-    Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(
-      color: Colors.white, borderRadius: BorderRadius.circular(18)),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const CircleAvatar(radius: 32, backgroundColor: Color(0xFFFFE9EC),
-          child: Icon(Icons.person, color: red, size: 34)),
-        const SizedBox(height: 18),
-        const Text('Ismingiz'), const SizedBox(height: 7),
-        TextField(controller: nameCtrl, decoration: const InputDecoration(
-          hintText: 'Ism-familiya', border: OutlineInputBorder())),
-        const SizedBox(height: 18),
-        const Text('Yetkazish manzili'), const SizedBox(height: 7),
-        TextField(controller: addressCtrl, maxLines: 2, decoration: const InputDecoration(
-          hintText: 'Ko‘cha, uy, xonadon', border: OutlineInputBorder())),
-        const SizedBox(height: 17),
-        SizedBox(width: double.infinity, child: FilledButton(onPressed: () {
-          setState(() { name = nameCtrl.text.trim(); address = addressCtrl.text.trim(); });
-          _save(); snack('Profil saqlandi');
-        }, child: const Text('Saqlash'))),
-        const SizedBox(height: 13),
-        const Text('Google/telefon orqali kirish va xarita hali ulanmagan.',
-          style: TextStyle(color: Colors.grey, fontSize: 12)),
+  Widget profileView() => ListView(padding: EdgeInsets.zero, children: [
+    Container(height: 130, padding: const EdgeInsets.all(23),
+      decoration: const BoxDecoration(gradient: LinearGradient(
+        colors: [Color(0xFFBA001A), Color(0xFFF20A26)])),
+      child: Row(children: [
+        const CircleAvatar(radius: 33, backgroundColor: Colors.white,
+          child: Icon(Icons.person, color: red, size: 39)),
+        const SizedBox(width: 15),
+        Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(name.isEmpty ? 'Mening profilim' : name,
+            style: const TextStyle(color: Colors.white, fontSize: 23,
+              fontWeight: FontWeight.w900)),
+          const SizedBox(height: 5),
+          const Text('ALIKURYER mijoz kabineti',
+            style: TextStyle(color: Colors.white70, fontSize: 12)),
+        ])),
+        IconButton(onPressed: () => openExtra('edit'),
+          icon: const Icon(Icons.edit_outlined, color: Colors.white)),
       ])),
+    Padding(padding: const EdgeInsets.all(16), child: Column(children: [
+      Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+        decoration: BoxDecoration(color: Colors.white,
+          borderRadius: BorderRadius.circular(18)),
+        child: Row(children: [
+          const Icon(Icons.location_on_outlined, color: red),
+          const SizedBox(width: 10),
+          Expanded(child: Text(address.isEmpty ? 'Yetkazish manzilini kiriting' : address,
+            maxLines: 2, overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.w700))),
+          IconButton(onPressed: () => openExtra('address'),
+            icon: const Icon(Icons.chevron_right)),
+        ])),
+      const SizedBox(height: 15),
+      for (final item in [
+        ('Buyurtmalarim', Icons.receipt_long_outlined, 'orders'),
+        ('Sevimli taomlar', Icons.favorite_border, 'favorites'),
+        ('To‘lov usullari', Icons.credit_card_outlined, 'payment'),
+        ('Manzillarim', Icons.location_on_outlined, 'address'),
+        ('Bonuslar va hamyon', Icons.account_balance_wallet_outlined, 'wallet'),
+        ('Profilni tahrirlash', Icons.person_outline, 'edit'),
+        ('Yordam markazi', Icons.support_agent_outlined, 'support'),
+      ])
+        Container(margin: const EdgeInsets.only(bottom: 2), color: Colors.white,
+          child: ListTile(
+            leading: Icon(item.$2, color: red),
+            title: Text(item.$1, style: const TextStyle(fontWeight: FontWeight.w700)),
+            trailing: const Icon(Icons.chevron_right, color: Colors.black45),
+            onTap: () => item.$3 == 'orders' ? go(2) : openExtra(item.$3))),
+      const SizedBox(height: 14),
+      const Text('Sinov versiyasi. Profil va to‘lov xizmatlari bosqichma-bosqich ulanadi.',
+        textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey)),
+    ])),
   ]);
 
   @override
