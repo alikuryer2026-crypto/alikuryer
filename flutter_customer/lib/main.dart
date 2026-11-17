@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -54,8 +55,22 @@ class AliKuryerApp extends StatelessWidget {
         backgroundColor: red, foregroundColor: Colors.white,
         minimumSize: const Size(0, 52), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)))),
     ),
-    home: const CustomerHome(),
+    home: const AliCustomerEntry(),
   );
+}
+
+class AliCustomerEntry extends StatefulWidget {
+  const AliCustomerEntry({super.key});
+  @override
+  State<AliCustomerEntry> createState() => _AliCustomerEntryState();
+}
+
+class _AliCustomerEntryState extends State<AliCustomerEntry> {
+  bool started = false;
+  @override
+  Widget build(BuildContext context) => started
+    ? const CustomerHome()
+    : AliOnboarding(onFinish: () => setState(() => started = true));
 }
 
 class CustomerHome extends StatefulWidget {
