@@ -179,18 +179,25 @@ class AliTrackingScreen extends StatelessWidget {
 }
 
 class AliFavoritesScreen extends StatelessWidget {
-  const AliFavoritesScreen({super.key});
+  const AliFavoritesScreen({super.key, required this.items});
+  final List<String> items;
   @override
-  Widget build(BuildContext context) => const AliPage(title: 'Sevimlilar',
-    subtitle: 'Restoranlar va taomlar',
-    children: [
-      AliSectionCard(child: Column(children: [
-        Icon(Icons.favorite_border, color: AliPalette.red, size: 56),
-        SizedBox(height: 12), Text('Sevimlilar ro‘yxati hozircha bo‘sh'),
-        SizedBox(height: 6), Text('Saqlangan restoran va taomlar shu yerda ko‘rinadi.',
-          textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
-      ])),
-    ]);
+  Widget build(BuildContext context) => AliPage(title: 'Sevimlilar',
+    subtitle: 'Siz saqlagan taomlar',
+    children: items.isEmpty
+      ? [const AliSectionCard(child: Column(children: [
+          Icon(Icons.favorite_border, color: AliPalette.red, size: 56),
+          SizedBox(height: 12),
+          Text('Sevimlilar ro‘yxati hozircha bo‘sh'),
+          SizedBox(height: 6),
+          Text('Taom kartasidagi yurakchani bosib saqlang.',
+            textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
+        ]))]
+      : items.map((item) => AliActionTile(
+          icon: Icons.favorite, title: item,
+          subtitle: 'Saqlangan taom',
+        )).toList(),
+  );
 }
 
 class AliSupportScreen extends StatelessWidget {
