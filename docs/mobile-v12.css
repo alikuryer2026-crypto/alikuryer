@@ -32,3 +32,58 @@ html{overflow-x:hidden}body{overflow-x:hidden}
  .trust-strip{gap:6px}.trust-strip span{padding:7px 10px;font-size:11px}
 }
 @media(max-width:365px){.promo{height:116px}.promo p{font-size:11px}.category{flex-basis:105px;min-width:105px}}
+
+/* V13 — refined customer-first mobile hierarchy, keep original artwork */
+:root{--ak-red:#e50914;--ak-ink:#17171c}
+button,a,input{ -webkit-tap-highlight-color:transparent }
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #e5091488;outline-offset:2px}
+.card,.category,.promo{transition:transform .18s ease,box-shadow .18s ease}
+@media(hover:hover){.card:hover,.category:hover,.promo:hover{transform:translateY(-3px);box-shadow:0 12px 26px #00000012}}
+#home .sectionhead{align-items:center;gap:12px}
+#home .sectionhead h2{letter-spacing:-.45px}
+#home .grid{gap:14px}
+#home .card{overflow:hidden;border-radius:20px}
+#home .card .photo{width:100%;object-fit:cover}
+#home .card .info{min-width:0}
+#home .card .info h3{line-height:1.25;overflow-wrap:anywhere}
+#home .more{white-space:nowrap}
+#cart .summary{gap:14px}
+#cart .summary:last-of-type{font-size:1.12em}
+#cart .panel{border:1px solid #ececf0}
+#restaurants .grid{gap:14px}
+@media(max-width:650px){
+ header{position:sticky;top:0;z-index:45;background:#fff;box-shadow:0 2px 12px #0000000b}
+ #home .hero{display:block;width:100%;height:auto;max-height:clamp(190px,54vw,300px);object-fit:contain;object-position:center;background:#170c12}
+ #home .searchbox{position:relative;z-index:2;margin:10px 13px 8px;box-shadow:0 5px 19px #00000012;border:1px solid #eeeeef}
+ #home .searchbox input{font-size:16px}
+ #home .main{padding-top:0}
+ #home .trust-strip{display:flex;overflow-x:auto;white-space:nowrap;scrollbar-width:none;padding:3px 0 8px}
+ #home .trust-strip::-webkit-scrollbar{display:none}
+ #home .trust-strip span{flex:0 0 auto}
+ #home .section{margin-top:20px}
+ #home .sectionhead h2{font-size:clamp(18px,5vw,22px);line-height:1.25}
+ #home .sectionhead .more{font-size:12px}
+ #home .categories{gap:10px;padding-bottom:9px}
+ #home .category{border-radius:16px;box-shadow:0 3px 12px #0000000a}
+ #home .promos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #home .promo{min-width:0;overflow:hidden}
+ #home .promo h3{max-width:82%;line-height:1.12}
+ #home .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ #home .card{min-width:0;border-radius:17px}
+ #home .card .photo{height:clamp(110px,32vw,165px)}
+ #home .card .info{padding:10px;gap:7px}
+ #home .card .info h3{font-size:14px}
+ #home .card .muted{font-size:11px;line-height:1.35}
+ #restaurants .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ #restaurants .card{min-width:0;overflow:hidden}
+ #restaurants .card .photo{height:clamp(115px,34vw,165px);object-fit:cover}
+ #cart .main,#profile .main,#orders .main{padding-bottom:105px}
+ .bottom{box-shadow:0 -4px 20px #00000010;background:#fff}
+ .bottom button.active{color:var(--ak-red)}
+}
+@media(max-width:370px){
+ #home .promos{grid-template-columns:1fr}
+ #home .promo{height:112px}
+ #home .searchbox button{padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.card,.category,.promo{transition:none!important}}
