@@ -162,6 +162,8 @@ class _CustomerHomeState extends State<CustomerHome> {
 
   void go(int next) => setState(() { tab = next; if (next != 0) restaurant = ''; });
   void openExtra(String route) {
+    if (route == 'edit') { editCustomerName(); return; }
+    if (route == 'address') { editDeliveryAddress(); return; }
     final Widget page = switch (route) {
       'hub' => AliHubScreen(open: openExtra),
       'edit' => const AliEditProfileScreen(),
@@ -175,6 +177,34 @@ class _CustomerHomeState extends State<CustomerHome> {
       _ => const AliSupportScreen(),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  void editCustomerName() {
+    nameCtrl.text = name;
+    showModalBottomSheet<void>(context: context, isScrollControlled: true,
+      showDragHandle: true, builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.viewInsetsOf(ctx).bottom + 24),
+        child: Column(mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text('Profilni tahrirlash',
+            style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 16),
+          TextField(controller: nameCtrl, autofocus: true,
+            textCapitalization: TextCapitalization.words,
+            decoration: const InputDecoration(labelText: 'Ism-familiya',
+              prefixIcon: Icon(Icons.person_outline), border: OutlineInputBorder())),
+          const SizedBox(height: 16),
+          SizedBox(width: double.infinity, child: FilledButton(
+            onPressed: () {
+              final value = nameCtrl.text.trim();
+              if (value.isEmpty) return;
+              setState(() => name = value);
+              _save();
+              Navigator.pop(ctx);
+              snack('Profil saqlandi');
+            }, child: const Text('Saqlash'))),
+        ]),
+      ));
   }
 
   void editDeliveryAddress() {
@@ -348,11 +378,12 @@ class _CustomerHomeState extends State<CustomerHome> {
               const SizedBox(width: 170, child: Text('Sevimli restoranlaringizdan tez va qulay buyurtma bering',
                 style: TextStyle(color: Colors.white, fontSize: 12, height: 1.4))),
               const Spacer(),
-              Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              GestureDetector(onTap: () => setState(() => search = ''),
+                child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                 decoration: BoxDecoration(color: Colors.white,
                   borderRadius: BorderRadius.circular(20)),
                 child: const Text('Taomlarni tanlash  →',
-                  style: TextStyle(color: red, fontWeight: FontWeight.w900, fontSize: 12))),
+                  style: TextStyle(color: red, fontWeight: FontWeight.w900, fontSize: 12)))),
             ])),
         ])),
       const SizedBox(height: 18),
