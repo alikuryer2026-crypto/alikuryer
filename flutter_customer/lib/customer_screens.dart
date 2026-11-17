@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'reference_design.dart';
+import 'map_preview.dart';
 
 /// Additional customer screens matching the approved 16-screen design direction.
 /// These are visual flows and intentionally do not simulate real payments or GPS.
@@ -114,12 +115,7 @@ class _AliAddressScreenState extends State<AliAddressScreen> {
   void dispose() { address.dispose(); super.dispose(); }
   @override
   Widget build(BuildContext context) => AliPage(title: 'Manzilni belgilash', subtitle: 'Yetkazib berish manzilini kiriting', children: [
-    Container(height: 230, decoration: BoxDecoration(color: const Color(0xFFE9F0EC),
-      borderRadius: BorderRadius.circular(20)), child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.location_on, color: AliPalette.red, size: 58),
-      SizedBox(height: 12), Text('Xarita ulanishi keyingi bosqichda',
-        style: TextStyle(fontWeight: FontWeight.w700)),
-    ])),
+    const AliMapPreview(height: 230),
     const SizedBox(height: 20),
     TextField(controller: address, maxLines: 2, decoration: const InputDecoration(
       labelText: 'Ko‘cha, uy va xonadon', border: OutlineInputBorder())),
@@ -164,12 +160,7 @@ class AliTrackingScreen extends StatelessWidget {
     title: accepted ? 'Buyurtmangiz qabul qilindi' : 'Buyurtmani kuzatish',
     subtitle: 'Jonli kuzatuv Supabase va GPS ulangach ishlaydi',
     children: [
-      Container(height: 225, decoration: BoxDecoration(color: const Color(0xFFE9F0EC),
-        borderRadius: BorderRadius.circular(20)),
-        child: const Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.route, size: 68, color: AliPalette.red),
-          SizedBox(height: 12), Text('Jonli xarita hozircha ulanmagan'),
-        ]))),
+      const AliMapPreview(height: 245, showCourier: true),
       const SizedBox(height: 18),
       const AliActionTile(icon: Icons.restaurant, title: 'Restoran', subtitle: 'Buyurtma ma’lumotlari keyin ulanadi'),
       const AliActionTile(icon: Icons.delivery_dining, title: 'Kuryer', subtitle: 'Kuryer tayinlanmagan'),
