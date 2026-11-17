@@ -22,24 +22,31 @@ class _AliOnboardingState extends State<AliOnboarding> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
+    backgroundColor: step == 0 ? AliPalette.red : Colors.white,
     body: SafeArea(child: Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
       child: Column(children: [
         if (step > 0) Align(alignment: Alignment.centerLeft,
           child: IconButton(onPressed: () => setState(() => step--), icon: const Icon(Icons.arrow_back))),
-        const AliBrandHeader(),
+        if (step == 0) const Padding(padding: EdgeInsets.only(top: 14), child: Text('Alikuryer',
+          style: TextStyle(color: Colors.white, fontSize: 36, fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w900))) else const AliBrandHeader(),
         const SizedBox(height: 26),
         Expanded(child: SingleChildScrollView(child: Column(children: [
           if (step == 0) ...[
             const SizedBox(height: 20),
-            const Icon(Icons.delivery_dining, size: 155, color: AliPalette.red),
+            Container(height: 235, width: double.infinity,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
+                gradient: LinearGradient(colors: [Colors.white.withValues(alpha: .20),
+                  Colors.white.withValues(alpha: .04)])),
+              child: const Icon(Icons.delivery_dining_rounded, size: 185, color: Colors.white)),
             const SizedBox(height: 30),
             const Text('Hamma narsa\nsiz uchun!', textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 34, height: 1.1, fontWeight: FontWeight.w900)),
+              style: TextStyle(fontSize: 34, height: 1.1, fontWeight: FontWeight.w900,
+                color: Colors.white)),
             const SizedBox(height: 12),
             const Text('Sevimli taomlaringizni tez, qulay va ishonchli yetkazib beramiz!',
-              textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
+              textAlign: TextAlign.center, style: TextStyle(color: Colors.white70)),
           ],
           if (step == 1) ...[
             const Text('Tilni tanlang', style: TextStyle(fontSize: 29, fontWeight: FontWeight.w900)),
@@ -82,6 +89,8 @@ class _AliOnboardingState extends State<AliOnboarding> {
           ],
         ]))),
         const SizedBox(height: 16),
+        if (step == 0) const Padding(padding: EdgeInsets.only(bottom: 15),
+          child: Text('●  ○  ○  ○', style: TextStyle(color: Colors.white, fontSize: 16))),
         AliRedButton(
           label: step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish' : step == 2 ? 'Ko‘rishni davom ettirish' : 'Ilovani ko‘rish',
           icon: Icons.arrow_forward,
