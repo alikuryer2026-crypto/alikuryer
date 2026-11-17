@@ -279,10 +279,8 @@ class _CustomerHomeState extends State<CustomerHome> {
           Positioned(right: -30, bottom: -45, child: Container(width: 190, height: 190,
             decoration: BoxDecoration(shape: BoxShape.circle,
               color: Colors.white.withValues(alpha: .08)))),
-          Positioned(right: 0, bottom: 6, child: SizedBox(width: 154, height: 158,
-            child: Image.network(
-              'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=400',
-              fit: BoxFit.cover,
+          Positioned(right: 1, bottom: 6, child: SizedBox(width: 152, height: 164,
+            child: Image.asset('assets/courier.png', fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const Icon(Icons.delivery_dining,
                 size: 90, color: Colors.white)))),
           Padding(padding: const EdgeInsets.all(21),
