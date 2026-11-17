@@ -29,7 +29,15 @@ const foods = <Food>[
   Food(8, 'Burger set', 'Burger', 'Burger House', 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=700', 76000),
 ];
 
-String money(int n) => '${n.toString().replaceAllMapped(RegExp(r'\\B(?=(\\d{3})+(?!\\d))'), (m) => ' ')} so‘m';
+String money(int n) {
+  final digits = n.toString();
+  final buffer = StringBuffer();
+  for (var i = 0; i < digits.length; i++) {
+    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write(' ');
+    buffer.write(digits[i]);
+  }
+  return '${buffer.toString()} so‘m';
+}
 
 class AliKuryerApp extends StatelessWidget {
   const AliKuryerApp({super.key});
