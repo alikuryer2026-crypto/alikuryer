@@ -400,6 +400,9 @@ class _CustomerHomeState extends State<CustomerHome> {
         Text(o['address'].toString(), style: const TextStyle(color: Colors.grey)),
         const SizedBox(height: 6),
         rowAmount('Sinov buyurtmasi', money((o['total'] as num).toInt())),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(onPressed: () => openExtra('tracking'),
+          icon: const Icon(Icons.route), label: const Text('Kuzatish oynasi (demo)')),
       ]))),
   ]);
 
