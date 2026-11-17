@@ -1,3 +1,4 @@
+import 'supabase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,7 +10,7 @@ class RestaurantsPage extends StatefulWidget {
 class _RestaurantsPageState extends State<RestaurantsPage> {
   String query = '';
   Future<List<Map<String, dynamic>>> fetchRestaurants() async {
-    if (!Supabase.instance.isInitialized) return [];
+    if (!legacySupabaseReady) return [];
     final result = await Supabase.instance.client.from('restaurants')
       .select('id,name,description,address_line').eq('is_active', true).order('name').limit(100);
     return List<Map<String, dynamic>>.from(result);
