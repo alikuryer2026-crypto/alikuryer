@@ -85,6 +85,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   int tab = 0;
   String search = '', category = 'Barchasi', restaurant = '', name = '', address = '';
   final Map<int, int> cart = {};
+  final Set<int> favorites = {};
   final List<Map<String, dynamic>> orders = [];
   final nameCtrl = TextEditingController();
   final addressCtrl = TextEditingController();
@@ -98,6 +99,7 @@ class _CustomerHomeState extends State<CustomerHome> {
     if (!mounted) return;
     setState(() {
       name = prefs.getString('name') ?? '';
+      favorites.addAll(prefs.getStringList('favorites')?.map(int.parse) ?? const <int>[]);
       address = prefs.getString('address') ?? '';
       nameCtrl.text = name; addressCtrl.text = address;
       try {
@@ -113,6 +115,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('cart', jsonEncode(cart.map((k, v) => MapEntry(k.toString(), v))));
+    await prefs.setStringList('favorites', favorites.map((e) => e.toString()).toList());
     await prefs.setString('orders', jsonEncode(orders));
     await prefs.setString('name', name);
     await prefs.setString('address', address);
@@ -142,12 +145,18 @@ class _CustomerHomeState extends State<CustomerHome> {
       'payment' => const AliPaymentScreen(),
       'tracking' => const AliTrackingScreen(),
       'accepted' => const AliTrackingScreen(accepted: true),
-      'favorites' => const AliFavoritesScreen(),
+      'favorites' => AliFavoritesScreen(items: foods.where((f) => favorites.contains(f.id)).map((f) => f.name).toList()),
       'support' => const AliSupportScreen(),
       'wallet' => const AliWalletScreen(),
       _ => const AliSupportScreen(),
     };
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  void toggleFavorite(Food f) {
+    setState(() { if (!favorites.add(f.id)) favorites.remove(f.id); });
+    _save();
+    snack(favorites.contains(f.id) ? 'Sevimlilarga qo‘shildi' : 'Sevimlilardan olib tashlandi');
   }
 
   void snack(String message) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
@@ -166,7 +175,11 @@ class _CustomerHomeState extends State<CustomerHome> {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(borderRadius: BorderRadius.circular(18), child: photo(f.image, height: 205)),
-          const SizedBox(height: 16), Text(f.name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 16), Row(children: [
+            Expanded(child: Text(f.name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900))),
+            IconButton(onPressed: () { toggleFavorite(f); refresh(() {}); },
+              icon: Icon(favorites.contains(f.id) ? Icons.favorite : Icons.favorite_border, color: red)),
+          ]),
           const SizedBox(height: 5), Text(f.restaurant, style: const TextStyle(color: Colors.grey)),
           const SizedBox(height: 10),
           const Text('Tarkib va porsiya tafsilotlari restoran tomonidan tasdiqlanadi.', style: TextStyle(color: Colors.black54)),
@@ -188,7 +201,9 @@ class _CustomerHomeState extends State<CustomerHome> {
     child: Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(19),
       boxShadow: const [BoxShadow(color: Color(0x0B000000), blurRadius: 16, offset: Offset(0, 6))]),
       clipBehavior: Clip.antiAlias, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        photo(f.image, height: 125),
+        Stack(children: [photo(f.image, height: 125), Positioned(top: 5, right: 5,
+          child: IconButton.filledTonal(onPressed: () => toggleFavorite(f),
+            icon: Icon(favorites.contains(f.id) ? Icons.favorite : Icons.favorite_border, color: red)))]),
         Padding(padding: const EdgeInsets.all(11), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(f.name, maxLines: 1, overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
