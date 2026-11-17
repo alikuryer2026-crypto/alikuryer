@@ -336,7 +336,24 @@ class _CustomerHomeState extends State<CustomerHome> {
     final chosen = foods.where((f) => (cart[f.id] ?? 0) > 0).toList();
     return ListView(padding: const EdgeInsets.all(16), children: [
       heading('Savatcham'),
-      if (chosen.isEmpty) const Padding(padding: EdgeInsets.all(40), child: Center(child: Text('Savatcha bo‘sh. Taom tanlang.'))),
+      if (chosen.isEmpty) Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 52),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22)),
+        child: Column(children: [
+          Container(width: 104, height: 104, decoration: const BoxDecoration(
+            color: AliPalette.softRed, shape: BoxShape.circle),
+            child: const Icon(Icons.shopping_basket_outlined, color: red, size: 57)),
+          const SizedBox(height: 20),
+          const Text('Savatchangiz bo‘sh', style: TextStyle(
+            fontSize: 21, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 8),
+          const Text('Mazali taomlarni tanlang va savatchaga qo‘shing',
+            textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
+          const SizedBox(height: 19),
+          SizedBox(width: double.infinity, child: FilledButton.icon(
+            onPressed: () => go(0), icon: const Icon(Icons.restaurant_menu),
+            label: const Text('Taomlarni ko‘rish'))),
+        ])),
       ...chosen.map((f) => Container(margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
         child: Row(children: [
@@ -350,7 +367,22 @@ class _CustomerHomeState extends State<CustomerHome> {
           Text('${cart[f.id]}', style: const TextStyle(fontWeight: FontWeight.bold)),
           IconButton(onPressed: () => change(f, 1), icon: const Icon(Icons.add_circle, color: red)),
         ]))),
-      if (chosen.isNotEmpty) Container(padding: const EdgeInsets.all(17),
+      if (chosen.isNotEmpty) ...[
+        const SizedBox(height: 12),
+        Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(18)),
+          child: Row(children: [
+            const Icon(Icons.local_offer_outlined, color: red),
+            const SizedBox(width: 12),
+            const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text('Promokod', style: TextStyle(fontWeight: FontWeight.w800)),
+                Text('Chegirma tizimi keyin ulanadi',
+                  style: TextStyle(fontSize: 12, color: Colors.black54))])),
+            TextButton(onPressed: () => snack('Promokodlar hali ulanmagan'),
+              child: const Text('Kiritish')),
+          ])),
+        const SizedBox(height: 12),
+        Container(padding: const EdgeInsets.all(17),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
         child: Column(children: [
           rowAmount('Taomlar', money(subtotal)), const SizedBox(height: 12),
@@ -362,6 +394,7 @@ class _CustomerHomeState extends State<CustomerHome> {
           const SizedBox(height: 12),
           SizedBox(width: double.infinity, child: FilledButton(onPressed: checkout, child: const Text('Buyurtmani davom ettirish'))),
         ])),
+      ],
     ]);
   }
 
@@ -391,7 +424,24 @@ class _CustomerHomeState extends State<CustomerHome> {
 
   Widget ordersView() => ListView(padding: const EdgeInsets.all(16), children: [
     heading('Buyurtmalarim'),
-    if (orders.isEmpty) const Padding(padding: EdgeInsets.all(40), child: Center(child: Text('Hozircha buyurtmalar yo‘q'))),
+    if (orders.isEmpty) Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 58),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22)),
+      child: Column(children: [
+        Container(width: 106, height: 106, decoration: const BoxDecoration(
+          color: AliPalette.softRed, shape: BoxShape.circle),
+          child: const Icon(Icons.receipt_long_outlined, color: red, size: 56)),
+        const SizedBox(height: 20),
+        const Text('Buyurtmalar hali yo‘q',
+          style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900)),
+        const SizedBox(height: 8),
+        const Text('Birinchi buyurtmangizni berganingizdan so‘ng\nu shu yerda ko‘rinadi',
+          textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
+        const SizedBox(height: 20),
+        SizedBox(width: double.infinity, child: FilledButton.icon(
+          onPressed: () => go(0), icon: const Icon(Icons.restaurant_menu),
+          label: const Text('Restoranlarni ko‘rish'))),
+      ])),
     ...orders.map((o) => Container(margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(17)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
