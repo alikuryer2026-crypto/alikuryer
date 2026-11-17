@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'reference_design.dart';
+import 'courier_illustration.dart';
 
 /// Local onboarding preview. Phone OTP is not sent until an auth provider is connected.
 class AliOnboarding extends StatefulWidget {
@@ -39,7 +40,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
                 gradient: LinearGradient(colors: [Colors.white.withValues(alpha: .20),
                   Colors.white.withValues(alpha: .04)])),
-              child: const Icon(Icons.delivery_dining_rounded, size: 185, color: Colors.white)),
+              child: const Center(child: AliCourierIllustration(size: 235))),
             const SizedBox(height: 30),
             const Text('Hamma narsa\nsiz uchun!', textAlign: TextAlign.center,
               style: TextStyle(fontSize: 34, height: 1.1, fontWeight: FontWeight.w900,
