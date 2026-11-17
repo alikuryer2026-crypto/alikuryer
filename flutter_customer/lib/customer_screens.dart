@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'reference_design.dart';
 import 'map_preview.dart';
+import 'courier_illustration.dart';
 
 /// Additional customer screens matching the approved 16-screen design direction.
 /// These are visual flows and intentionally do not simulate real payments or GPS.
@@ -21,8 +22,27 @@ class AliPage extends StatelessWidget {
     backgroundColor: AliPalette.canvas,
     appBar: AppBar(backgroundColor: Colors.white, title: const AliBrandHeader()),
     body: ListView(padding: const EdgeInsets.fromLTRB(16, 15, 16, 35), children: [
-      Text(title, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AliPalette.ink)),
-      if (subtitle != null) ...[const SizedBox(height: 5), Text(subtitle!, style: const TextStyle(color: Colors.black54))],
+      Container(height: 115, clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [
+            AliPalette.deepRed, AliPalette.red]),
+          borderRadius: BorderRadius.circular(19)),
+        child: Stack(children: [
+          Positioned(right: -12, bottom: -27,
+            child: AliCourierIllustration(size: 135)),
+          Padding(padding: const EdgeInsets.fromLTRB(17, 19, 115, 12),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(title, maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white,
+                  fontSize: 21, fontWeight: FontWeight.w900)),
+              if (subtitle != null) ...[
+                const SizedBox(height: 6),
+                Text(subtitle!, maxLines: 2, overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white70, fontSize: 11)),
+              ],
+            ])),
+        ])),
       const SizedBox(height: 18),
       ...children,
     ]),
