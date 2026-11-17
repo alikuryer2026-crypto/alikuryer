@@ -177,6 +177,37 @@ class _CustomerHomeState extends State<CustomerHome> {
     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
   }
 
+  void editDeliveryAddress() {
+    addressCtrl.text = address;
+    showModalBottomSheet<void>(context: context, isScrollControlled: true,
+      showDragHandle: true, builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(20, 10, 20, MediaQuery.viewInsetsOf(ctx).bottom + 22),
+        child: Column(mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text('Yetkazish manzili', style: TextStyle(
+            fontSize: 23, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 8),
+          const Text('Manzilni qo‘lda kiriting. Xarita keyingi bosqichda ulanadi.',
+            style: TextStyle(color: Colors.black54)),
+          const SizedBox(height: 17),
+          TextField(controller: addressCtrl, autofocus: true, maxLines: 2,
+            decoration: const InputDecoration(hintText: 'Ko‘cha, uy, xonadon',
+              prefixIcon: Icon(Icons.location_on_outlined),
+              border: OutlineInputBorder())),
+          const SizedBox(height: 14),
+          SizedBox(width: double.infinity, child: FilledButton(
+            onPressed: () {
+              final value = addressCtrl.text.trim();
+              if (value.isEmpty) return;
+              setState(() => address = value);
+              _save();
+              Navigator.pop(ctx);
+              snack('Manzil saqlandi');
+            }, child: const Text('Manzilni saqlash'))),
+        ]),
+      ));
+  }
+
   void toggleFavorite(Food f) {
     setState(() { if (!favorites.add(f.id)) favorites.remove(f.id); });
     _save();
@@ -285,7 +316,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       (search.isEmpty || f.name.toLowerCase().contains(search.toLowerCase()) ||
        f.restaurant.toLowerCase().contains(search.toLowerCase()))).toList();
     return ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 24), children: [
-      InkWell(onTap: () => go(3), child: Row(children: [
+      InkWell(onTap: editDeliveryAddress, child: Row(children: [
         const Icon(Icons.location_on, color: red), const SizedBox(width: 6),
         Expanded(child: Text(address.isEmpty ? 'Yetkazish manzilini kiriting' : address,
           maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700))),
@@ -518,7 +549,7 @@ class _CustomerHomeState extends State<CustomerHome> {
           Expanded(child: Text(address.isEmpty ? 'Yetkazish manzilini kiriting' : address,
             maxLines: 2, overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.w700))),
-          IconButton(onPressed: () => openExtra('address'),
+          IconButton(onPressed: editDeliveryAddress,
             icon: const Icon(Icons.chevron_right)),
         ])),
       const SizedBox(height: 15),
