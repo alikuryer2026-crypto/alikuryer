@@ -113,6 +113,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   final List<Map<String, dynamic>> orders = [];
   final nameCtrl = TextEditingController();
   final addressCtrl = TextEditingController();
+  final homeScroll = ScrollController();
   bool loaded = false;
 
   @override
@@ -146,7 +147,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   }
 
   @override
-  void dispose() { nameCtrl.dispose(); addressCtrl.dispose(); super.dispose(); }
+  void dispose() { nameCtrl.dispose(); addressCtrl.dispose(); homeScroll.dispose(); super.dispose(); }
 
   int get totalItems => cart.values.fold(0, (a, b) => a + b);
   int get subtotal => foods.fold(0, (sum, f) => sum + f.price * (cart[f.id] ?? 0));
@@ -345,7 +346,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       (category == 'Barchasi' || f.category == category) &&
       (search.isEmpty || f.name.toLowerCase().contains(search.toLowerCase()) ||
        f.restaurant.toLowerCase().contains(search.toLowerCase()))).toList();
-    return ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 24), children: [
+    return ListView(controller: homeScroll, padding: const EdgeInsets.fromLTRB(16, 8, 16, 24), children: [
       InkWell(onTap: editDeliveryAddress, child: Row(children: [
         const Icon(Icons.location_on, color: red), const SizedBox(width: 6),
         Expanded(child: Text(address.isEmpty ? 'Yetkazish manzilini kiriting' : address,
@@ -378,7 +379,12 @@ class _CustomerHomeState extends State<CustomerHome> {
               const SizedBox(width: 170, child: Text('Tez yetkazish • Keng tanlov • Ishonchli xizmat',
                 style: TextStyle(color: Colors.white, fontSize: 12, height: 1.4))),
               const Spacer(),
-              GestureDetector(onTap: () => setState(() => search = ''),
+              GestureDetector(onTap: () {
+                if (homeScroll.hasClients) {
+                  homeScroll.animateTo(365, duration: const Duration(milliseconds: 450),
+                    curve: Curves.easeInOut);
+                }
+              },
                 child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                 decoration: BoxDecoration(color: Colors.white,
                   borderRadius: BorderRadius.circular(20)),
@@ -427,7 +433,7 @@ class _CustomerHomeState extends State<CustomerHome> {
           const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Birinchi buyurtmaga', style: TextStyle(fontSize: 12,
               color: ink, fontWeight: FontWeight.w700)),
-            Text('15% chegirma!', style: TextStyle(fontSize: 20,
+            Text('15% chegirma! (namuna)', style: TextStyle(fontSize: 16,
               color: red, fontWeight: FontWeight.w900)),
           ])),
           Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
