@@ -69,10 +69,33 @@ class AliCustomerEntry extends StatefulWidget {
 
 class _AliCustomerEntryState extends State<AliCustomerEntry> {
   bool started = false;
+  bool checking = true;
+
   @override
-  Widget build(BuildContext context) => started
-    ? const CustomerHome()
-    : AliOnboarding(onFinish: () => setState(() => started = true));
+  void initState() {
+    super.initState();
+    _restoreOnboarding();
+  }
+
+  Future<void> _restoreOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      started = prefs.getBool('onboarding_complete') ?? false;
+      checking = false;
+    });
+  }
+
+  Future<void> _finishOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_complete', true);
+    if (mounted) setState(() => started = true);
+  }
+  @override
+  Widget build(BuildContext context) => checking
+    ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+    : started ? const CustomerHome()
+    : AliOnboarding(onFinish: _finishOnboarding);
 }
 
 class CustomerHome extends StatefulWidget {
