@@ -11,7 +11,7 @@ class AliOnboarding extends StatefulWidget {
 
 class _AliOnboardingState extends State<AliOnboarding> {
   int step = 0;
-  String language = 'O‘zbekcha';
+  String language = '🇺🇿  O‘zbekcha';
   final phone = TextEditingController();
   final code = TextEditingController();
 
