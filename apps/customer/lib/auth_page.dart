@@ -1,3 +1,4 @@
+import 'supabase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -12,7 +13,7 @@ class _AuthPageState extends State<AuthPage> {
   bool busy = false;
   String? message;
   Future<void> submit({required bool signup}) async {
-    if (!Supabase.instance.isInitialized) {
+    if (!legacySupabaseReady) {
       setState(() => message = 'Supabase ulanmagan');
       return;
     }
