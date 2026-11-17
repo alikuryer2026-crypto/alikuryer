@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
 import 'customer_screens.dart';
+import 'reference_design.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -252,19 +253,29 @@ class _CustomerHomeState extends State<CustomerHome> {
         const Icon(Icons.keyboard_arrow_down),
       ])),
       const SizedBox(height: 15),
-      Container(padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),
-          gradient: const LinearGradient(colors: [Color(0xFF1C1C23), Color(0xFFC30C24)])),
-        child: Row(children: [
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('ALI KURYER', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, letterSpacing: 2)),
-            const SizedBox(height: 10),
-            const Text('Mazali taomlar\nendi yanada yaqin!', style: TextStyle(
-              fontSize: 25, height: 1.15, fontWeight: FontWeight.w900, color: Colors.white)),
-            const SizedBox(height: 12),
-            const Text('Sevimli restoraningizni tanlang', style: TextStyle(color: Colors.white70, fontSize: 12)),
-          ])),
-          const Icon(Icons.delivery_dining, size: 85, color: Colors.white),
+      Container(height: 186, padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight,
+            colors: [Color(0xFFB40013), Color(0xFFF0172D)])),
+        child: Stack(children: [
+          Positioned(right: -20, bottom: -25, child: Icon(Icons.delivery_dining_rounded,
+            size: 175, color: Colors.white.withValues(alpha: .18))),
+          Positioned(right: 7, top: 5, child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: .16),
+              borderRadius: BorderRadius.circular(18)),
+            child: const Icon(Icons.delivery_dining, size: 72, color: Colors.white))),
+          const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('ALIKURYER', style: TextStyle(color: Colors.white70,
+              fontWeight: FontWeight.w900, letterSpacing: 1.7)),
+            SizedBox(height: 17),
+            Text('Sevimli taomlaringiz\nendi tez va qulay!',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900,
+                fontSize: 24, height: 1.13)),
+            SizedBox(height: 12),
+            Text('Restoranlarni kashf eting',
+              style: TextStyle(color: Colors.white, fontSize: 12)),
+          ]),
         ])),
       const SizedBox(height: 18),
       TextField(onChanged: (v) => setState(() => search = v),
@@ -272,10 +283,22 @@ class _CustomerHomeState extends State<CustomerHome> {
           prefixIcon: const Icon(Icons.search), filled: true, fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none))),
       heading('Kategoriyalar'),
-      SizedBox(height: 43, child: ListView(scrollDirection: Axis.horizontal, children:
-        ['Barchasi', 'Pitsa', 'Burger', 'Lavash', 'Somsa', 'Milliy taom', 'Salat'].map((c) =>
-          Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(label: Text(c),
-            selected: category == c, onSelected: (_) => setState(() => category = c)))).toList())),
+      SizedBox(height: 103, child: ListView(scrollDirection: Axis.horizontal, children:
+        [('Barchasi','🍽️'),('Pitsa','🍕'),('Burger','🍔'),('Lavash','🌯'),
+         ('Somsa','🥟'),('Milliy taom','🍚'),('Salat','🥗')].map((c) =>
+          GestureDetector(onTap: () => setState(() => category = c.$1),
+            child: Container(width: 87, margin: const EdgeInsets.only(right: 9),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              decoration: BoxDecoration(color: category == c.$1 ? AliPalette.softRed : Colors.white,
+                border: Border.all(color: category == c.$1 ? red : Colors.transparent),
+                borderRadius: BorderRadius.circular(17)),
+              child: Column(children: [
+                Text(c.$2, style: const TextStyle(fontSize: 34)),
+                const SizedBox(height: 7),
+                Text(c.$1, maxLines: 1, overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800,
+                    color: category == c.$1 ? red : ink)),
+              ])))).toList())),
       heading('Mashhur restoranlar'),
       ...restaurants.map(restaurantTile),
       heading('Taomlar', subtitle: 'Narxlar namunaviy, hamkorlar bazasi hali ulanmagan'),
@@ -408,17 +431,16 @@ class _CustomerHomeState extends State<CustomerHome> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text.rich(TextSpan(children: [
-      TextSpan(text: 'ALI', style: TextStyle(fontWeight: FontWeight.w900, color: ink)),
-      TextSpan(text: 'KURYER', style: TextStyle(fontWeight: FontWeight.w900, color: red)),
-    ])), actions: [
+    appBar: AppBar(backgroundColor: red, foregroundColor: Colors.white,
+      title: const Text('Alikuryer', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w900, color: Colors.white)), actions: [
       IconButton(tooltip: 'Savatcha', onPressed: () => go(1),
         icon: Badge(isLabelVisible: totalItems > 0, label: Text('$totalItems'),
           child: const Icon(Icons.shopping_bag_outlined))),
     ]),
     body: !loaded ? const Center(child: CircularProgressIndicator()) : IndexedStack(
       index: tab, children: [homeView(), cartView(), ordersView(), profileView()]),
-    bottomNavigationBar: NavigationBar(selectedIndex: tab, onDestinationSelected: go,
+    bottomNavigationBar: NavigationBar(backgroundColor: Colors.white, indicatorColor: AliPalette.softRed,
+      selectedIndex: tab, onDestinationSelected: go,
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Asosiy'),
         NavigationDestination(icon: Icon(Icons.shopping_bag_outlined), selectedIcon: Icon(Icons.shopping_bag), label: 'Savatcha'),
