@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'onboarding.dart';
 import 'customer_screens.dart';
 import 'reference_design.dart';
+import 'courier_illustration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -303,7 +304,7 @@ class _CustomerHomeState extends State<CustomerHome> {
             decoration: BoxDecoration(shape: BoxShape.circle,
               color: Colors.white.withValues(alpha: .08)))),
           Positioned(right: 1, bottom: 6, child: SizedBox(width: 152, height: 164,
-            child: const Icon(Icons.delivery_dining, size: 90, color: Colors.white))),
+            child: const AliCourierIllustration(size: 152))),
           Padding(padding: const EdgeInsets.all(21),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('ALIKURYER', style: TextStyle(color: Colors.white70,
