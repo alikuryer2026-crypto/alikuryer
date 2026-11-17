@@ -1,3 +1,4 @@
+import 'supabase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,7 +33,7 @@ class _AddressesPageState extends State<AddressesPage> {
   void dispose() { label.dispose(); address.dispose(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
-    if (!Supabase.instance.isInitialized || Supabase.instance.client.auth.currentUser == null) {
+    if (!legacySupabaseReady || Supabase.instance.client.auth.currentUser == null) {
       return Scaffold(appBar: AppBar(title: const Text('Manzillar')),
         body: const Center(child: Text('Manzillarni saqlash uchun tizimga kiring.')));
     }
