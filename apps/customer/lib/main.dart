@@ -1,3 +1,4 @@
+import 'supabase_state.dart';
 import 'auth_page.dart';
 import 'addresses_page.dart';
 import 'restaurants_page.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   if (url.isNotEmpty && key.isNotEmpty) {
     try {
       await Supabase.initialize(url: url, anonKey: key);
+      legacySupabaseReady = true;
     } catch (error) {
       debugPrint('Supabase initialization failed: $error');
     }
@@ -50,7 +52,7 @@ class _CustomerHomeState extends State<CustomerHome> {
   });
 
   Future<List<Map<String, dynamic>>> loadMenu() async {
-    if (!Supabase.instance.isInitialized) return [];
+    if (!legacySupabaseReady) return [];
     final result = await Supabase.instance.client
         .from('menu_items')
         .select('id,name,price_uzs')
@@ -259,7 +261,7 @@ class _CustomerHomeState extends State<CustomerHome> {
       OutlinedButton(onPressed: () => Navigator.push(context,
         MaterialPageRoute(builder: (_) => const AddressesPage())),
         child: const Text('Mening manzillarim')),
-      if (Supabase.instance.isInitialized && Supabase.instance.client.auth.currentUser != null)
+      if (legacySupabaseReady && Supabase.instance.client.auth.currentUser != null)
         TextButton(onPressed: () async {
           await Supabase.instance.client.auth.signOut();
           if (mounted) setState(() {});
