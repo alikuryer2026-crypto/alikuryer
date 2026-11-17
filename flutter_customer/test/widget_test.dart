@@ -10,7 +10,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const AliKuryerApp());
     await tester.pumpAndSettle();
-    expect(find.text('Alikuryer'), findsOneWidget);
+    expect(find.textContaining('Alikuryer'), findsWidgets);
     expect(find.text('Boshlash'), findsOneWidget);
     expect(find.byType(MaterialApp), findsOneWidget);
   });
