@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Original vector courier illustration rendered entirely in Flutter.
-/// No network image or third-party image license is required.
+/// Uses bundled original 3D courier artwork. A vector fallback is retained
+/// for development environments where the generated asset is unavailable.
 class AliCourierIllustration extends StatelessWidget {
   const AliCourierIllustration({super.key, this.size = 210});
   final double size;
@@ -9,7 +9,14 @@ class AliCourierIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     width: size, height: size,
-    child: CustomPaint(painter: _CourierPainter()),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(size * .12),
+      child: Image.asset('assets/courier_3d.webp',
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.high,
+        errorBuilder: (context, error, stackTrace) =>
+          CustomPaint(painter: _CourierPainter())),
+    ),
   );
 }
 
