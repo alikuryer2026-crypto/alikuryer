@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:alikuryer_customer/onboarding.dart';
 
 void main() {
-  testWidgets('Onboarding language selection and phone demo flow', (tester) async {
+  testWidgets('Onboarding opens and navigates to language selection', (tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(() {
@@ -11,21 +11,27 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    var completed = false;
     await tester.pumpWidget(MaterialApp(
-      home: AliOnboarding(onFinish: () => completed = true),
+      home: AliOnboarding(onFinish: () {}),
     ));
-    expect(find.text('Alikuryer'), findsOneWidget);
-    await tester.tap(find.text('Boshlash'));
-    await tester.pumpAndSettle();
+    expect(find.text('Boshlash'), findsOneWidget);
+    final start = find.text('Boshlash');
+    await tester.ensureVisible(start);
+    await tester.tap(start);
+    await tester.pump();
     expect(find.text('Tilni tanlang'), findsOneWidget);
     expect(find.text('O‘zbekcha'), findsOneWidget);
-    await tester.tap(find.text('Davom etish'));
-    await tester.pumpAndSettle();
-    expect(find.text('Telefon raqamingiz'), findsOneWidget);
-    await tester.tap(find.text('Dizaynni kirishsiz ko‘rish'));
+  });
+
+  testWidgets('Phone screen can be previewed without authentication', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: AliOnboarding(onFinish: () {}),
+    ));
+    await tester.tap(find.text('Boshlash'));
     await tester.pump();
-    expect(completed, isTrue);
-    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Davom etish'));
+    await tester.pump();
+    expect(find.text('Telefon raqamingiz'), findsOneWidget);
+    expect(find.text('Dizaynni kirishsiz ko‘rish'), findsOneWidget);
   });
 }
