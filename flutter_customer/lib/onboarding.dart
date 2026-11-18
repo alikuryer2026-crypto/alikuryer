@@ -52,8 +52,8 @@ class _AliOnboardingState extends State<AliOnboarding> {
       }
       return;
     }
-    if (requestedPhone == null || code.text.trim().length != 4) {
-      setState(() => authMessage = 'SMS orqali kelgan 4 xonali kodni kiriting');
+    if (requestedPhone == null || code.text.trim().length != 6) {
+      setState(() => authMessage = 'SMS orqali kelgan 6 xonali kodni kiriting');
       return;
     }
     setState(() { busy = true; authMessage = null; });
@@ -166,8 +166,8 @@ class _AliOnboardingState extends State<AliOnboarding> {
               textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
             const SizedBox(height: 16),
             TextField(controller: code, keyboardType: TextInputType.number,
-              maxLength: 4, textAlign: TextAlign.center,
-              decoration: const InputDecoration(labelText: '4 xonali SMS kod', border: OutlineInputBorder())),
+              maxLength: 6, textAlign: TextAlign.center,
+              decoration: const InputDecoration(labelText: '6 xonali SMS kod', border: OutlineInputBorder())),
           ],
         ]))),
         const SizedBox(height: 16),
