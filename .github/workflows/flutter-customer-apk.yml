@@ -72,7 +72,7 @@ jobs:
           values = root / 'values'
           values.mkdir(parents=True, exist_ok=True)
           (values / 'alikuryer_colors.xml').write_text(
-              '<?xml version="1.0" encoding="utf-8"?>\\n'
+              '<?xml version="1.0" encoding="utf-8"?>'
               '<resources><color name="alikuryer_red">#B90019</color></resources>')
           # Pre-Android 12 launch screen: red background and centered brand mark.
           background = '''<?xml version="1.0" encoding="utf-8"?>
