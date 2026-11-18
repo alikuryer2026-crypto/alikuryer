@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'reference_design.dart';
 import 'courier_illustration.dart';
+import 'ali_backend.dart';
 
 /// Local onboarding preview. Phone OTP is not sent until an auth provider is connected.
 class AliOnboarding extends StatefulWidget {
@@ -12,6 +13,9 @@ class AliOnboarding extends StatefulWidget {
 
 class _AliOnboardingState extends State<AliOnboarding> {
   int step = 0;
+  bool busy = false;
+  String? authMessage;
+  String? requestedPhone;
   String language = '🇺🇿  O‘zbekcha';
   final phone = TextEditingController();
   final code = TextEditingController();
@@ -20,6 +24,48 @@ class _AliOnboardingState extends State<AliOnboarding> {
   void dispose() { phone.dispose(); code.dispose(); super.dispose(); }
 
   void next() => setState(() => step = (step + 1).clamp(0, 3));
+
+  Future<void> proceed() async {
+    if (busy) return;
+    if (step < 2) { next(); return; }
+    if (step == 2) {
+      final digits = phone.text.replaceAll(RegExp(r'[^0-9]'), '');
+      final national = digits.startsWith('998') ? digits.substring(3) : digits;
+      if (national.length != 9) {
+        setState(() => authMessage = '9 xonali telefon raqamini kiriting');
+        return;
+      }
+      final fullPhone = '+998$national';
+      if (!AliBackend.ready) {
+        setState(() => authMessage = 'Server ulanmagan. Sinov rejimidan foydalaning.');
+        return;
+      }
+      setState(() { busy = true; authMessage = null; });
+      try {
+        await AliBackend.sendPhoneOtp(fullPhone);
+        if (!mounted) return;
+        setState(() { requestedPhone = fullPhone; step = 3; });
+      } catch (e) {
+        if (mounted) setState(() => authMessage = 'SMS yuborilmadi: $e');
+      } finally {
+        if (mounted) setState(() => busy = false);
+      }
+      return;
+    }
+    if (requestedPhone == null || code.text.trim().length != 4) {
+      setState(() => authMessage = 'SMS orqali kelgan 4 xonali kodni kiriting');
+      return;
+    }
+    setState(() { busy = true; authMessage = null; });
+    try {
+      await AliBackend.verifyPhoneOtp(requestedPhone!, code.text.trim());
+      if (mounted) widget.onFinish();
+    } catch (e) {
+      if (mounted) setState(() => authMessage = 'Kod tasdiqlanmadi: $e');
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -93,7 +139,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
             const Text('Telefon raqamingizni kiriting', textAlign: TextAlign.center,
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900)),
             const SizedBox(height: 10),
-            const Text('Telefon raqamingizni +998 formatida kiriting', style: TextStyle(color: Colors.grey)),
+            const Text('SMS orqali tasdiqlash uchun raqamingizni kiriting', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 16),
             TextField(controller: phone, keyboardType: TextInputType.phone,
               decoration: const InputDecoration(prefixText: '+998  ', labelText: 'Telefon raqami',
@@ -108,7 +154,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
               Expanded(child: OutlinedButton.icon(onPressed: null,
                 icon: const Icon(Icons.apple), label: const Text('Apple'))),
             ]),
-            const Text('Google, Apple va SMS kirish hali ulanmagan.',
+            const Text('Google va Apple kirish hali ulanmagan.',
               style: TextStyle(fontSize: 11, color: Colors.black45)),
           ],
           if (step == 3) ...[
@@ -116,21 +162,25 @@ class _AliOnboardingState extends State<AliOnboarding> {
             const SizedBox(height: 12),
             const Text('Tasdiqlash kodi', style: TextStyle(fontSize: 29, fontWeight: FontWeight.w900)),
             const SizedBox(height: 12),
-            const Text('Haqiqiy SMS kodi hali yuborilmaydi.',
+            Text(requestedPhone == null ? 'Avval telefon raqamini kiriting.' : '$requestedPhone raqamiga yuborilgan kodni kiriting.',
               textAlign: TextAlign.center, style: TextStyle(color: Colors.black54)),
             const SizedBox(height: 16),
             TextField(controller: code, keyboardType: TextInputType.number,
               maxLength: 4, textAlign: TextAlign.center,
-              decoration: const InputDecoration(labelText: '4 xonali kod (maket)', border: OutlineInputBorder())),
+              decoration: const InputDecoration(labelText: '4 xonali SMS kod', border: OutlineInputBorder())),
           ],
         ]))),
         const SizedBox(height: 16),
         if (step == 0) const Padding(padding: EdgeInsets.only(bottom: 15),
           child: Text('●  ○  ○  ○', style: TextStyle(color: Colors.white, fontSize: 16))),
+        if (authMessage != null) Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(authMessage!, textAlign: TextAlign.center,
+            style: const TextStyle(color: Color(0xFFE50922), fontWeight: FontWeight.w700))),
         AliRedButton(
-          label: step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish' : step == 2 ? 'Tasdiqlash kodiga o‘tish (demo)' : 'Ilovani ko‘rish',
+          label: busy ? 'Iltimos, kuting...' : step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish' : step == 2 ? 'Tasdiqlash kodini yuborish' : 'Kodni tasdiqlash',
           icon: Icons.arrow_forward,
-          onPressed: step < 3 ? next : widget.onFinish),
+          onPressed: busy ? null : proceed),
         if (step >= 2) TextButton(onPressed: widget.onFinish,
           child: const Text('Autentifikatsiyasiz sinov rejimida ko‘rish')),
       ]),
