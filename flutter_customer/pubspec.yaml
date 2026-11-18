@@ -1,7 +1,7 @@
 name: alikuryer_customer
 description: ALIKURYER customer mobile app
 publish_to: none
-version: 0.3.1+4
+version: 0.4.0+5
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
@@ -16,3 +16,5 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 flutter:
   uses-material-design: true
+  assets:
+    - assets/courier_3d.webp
