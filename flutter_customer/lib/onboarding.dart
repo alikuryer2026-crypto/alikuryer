@@ -35,7 +35,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
 
   void advance() {
     FocusScope.of(context).unfocus();
-    if (step == 2 && phone.text.replaceAll(RegExp(r'\\D'), '').length != 9) {
+    if (step == 2 && phone.text.replaceAll(RegExp(r'\D'), '').length != 9) {
       setState(() => error = '9 xonali telefon raqamini kiriting');
       return;
     }
@@ -186,12 +186,12 @@ class _AliOnboardingState extends State<AliOnboarding> {
                 SizedBox(height: height < 700 ? 10 : 34),
                 courier(height < 700 ? 260 : 320),
                 const SizedBox(height: 20),
-                const Text('Hamma narsa\\nsiz uchun!',
+                const Text('Hamma narsa\nsiz uchun!',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 35, height: 1.1,
                     fontWeight: FontWeight.w900, color: Colors.white)),
                 const SizedBox(height: 12),
-                const Text('Sevimli taomlaringizni tez, qulay va\\nishonchli yetkazib beramiz!',
+                const Text('Sevimli taomlaringizni tez, qulay va\nishonchli yetkazib beramiz!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 15, height: 1.5)),
               ],
