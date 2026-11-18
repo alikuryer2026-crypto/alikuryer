@@ -91,7 +91,6 @@ jobs:
               <item name="android:windowSplashScreenBackground">#B90019</item>
               <item name="android:windowSplashScreenAnimatedIcon">@drawable/alikuryer_splash_icon</item>
               <item name="android:windowSplashScreenIconBackgroundColor">#B90019</item>
-              <item name="android:postSplashScreenTheme">@style/NormalTheme</item>
               <item name="android:windowLightStatusBar">false</item>
               <item name="android:statusBarColor">#B90019</item>
             </style>
