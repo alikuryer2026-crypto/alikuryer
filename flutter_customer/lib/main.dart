@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'ali_backend.dart';
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
 import 'customer_screens.dart';
@@ -6,8 +7,9 @@ import 'reference_design.dart';
 import 'courier_illustration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AliBackend.initialize();
   runApp(const AliKuryerApp());
 }
 
