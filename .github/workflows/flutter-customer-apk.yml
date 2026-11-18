@@ -68,10 +68,16 @@ jobs:
           y = (432 - (box[3] - box[1])) / 2 - box[1]
           d.text((x, y), 'A', font=font, fill='white', stroke_width=2, stroke_fill='white')
           icon.save(drawable / 'alikuryer_splash_icon.png')
+          # A drawable attribute must reference a resource, not a raw hex color.
+          values = root / 'values'
+          values.mkdir(parents=True, exist_ok=True)
+          (values / 'alikuryer_colors.xml').write_text(
+              '<?xml version="1.0" encoding="utf-8"?>\\n'
+              '<resources><color name="alikuryer_red">#B90019</color></resources>')
           # Pre-Android 12 launch screen: red background and centered brand mark.
           background = '''<?xml version="1.0" encoding="utf-8"?>
           <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-            <item android:drawable="#B90019"/>
+            <item android:drawable="@color/alikuryer_red"/>
             <item>
               <bitmap android:gravity="center" android:src="@drawable/alikuryer_splash_icon"/>
             </item>
