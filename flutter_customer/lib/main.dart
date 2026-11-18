@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'ali_backend.dart';
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
 import 'customer_screens.dart';
@@ -7,9 +6,8 @@ import 'reference_design.dart';
 import 'courier_illustration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await AliBackend.initialize();
   runApp(const AliKuryerApp());
 }
 
@@ -742,27 +740,6 @@ class _CustomerHomeState extends State<CustomerHome> {
             title: Text(item.$1, style: const TextStyle(fontWeight: FontWeight.w700)),
             trailing: const Icon(Icons.chevron_right, color: Colors.black45),
             onTap: () => item.$3 == 'orders' ? go(2) : openExtra(item.$3))),
-      const SizedBox(height: 14),
-      ListTile(
-        tileColor: Colors.white,
-        leading: const Icon(Icons.cloud_outlined, color: red),
-        title: const Text('Supabase ulanishini tekshirish',
-          style: TextStyle(fontWeight: FontWeight.w700)),
-        subtitle: Text(AliBackend.signedIn
-          ? 'Telefon orqali tasdiqlangan sessiya mavjud'
-          : 'Mehmon rejimi — serverga kirish tasdiqlanmagan'),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () async {
-          final result = await AliBackend.checkRestaurants();
-          if (!mounted) return;
-          showDialog<void>(context: context, builder: (ctx) => AlertDialog(
-            title: const Text('Supabase diagnostikasi'),
-            content: Text(result),
-            actions: [TextButton(onPressed: () => Navigator.pop(ctx),
-              child: const Text('Yopish'))],
-          ));
-        },
-      ),
       const SizedBox(height: 14),
       const Text('Sinov versiyasi. Profil va to‘lov xizmatlari bosqichma-bosqich ulanadi.',
         textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.grey)),
