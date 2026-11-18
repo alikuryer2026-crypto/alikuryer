@@ -28,13 +28,22 @@ jobs:
           match = re.search(r'data:image/webp;base64,([A-Za-z0-9+/=]+)', source)
           if not match:
               raise RuntimeError('3D courier artwork missing from docs/index.html')
-          art = Image.open(io.BytesIO(base64.b64decode(match.group(1)))).convert('RGB')
+          art = Image.open(io.BytesIO(base64.b64decode(match.group(1)))).convert('RGBA')
           w, h = art.size
-          # Crop the rider and scooter from the right-hand half of the
-          # original Alikuryer hero. Excludes the text on the left.
-          art = art.crop((int(w * .49), int(h * .11), int(w * .90), int(h * .99)))
+          # Isolate the courier, not the whole promotional composition.
+          # Original artwork has burgers at far right and pagination dots below.
+          # Preserve the red scooter, rider and delivery box.
+          art = art.crop((int(w * .52), int(h * .10), int(w * .81), int(h * .91)))
+          # Transparent rounded-rectangle mask avoids visible rectangular corners.
+          from PIL import ImageDraw, ImageFilter
+          mask = Image.new('L', art.size, 0)
+          d = ImageDraw.Draw(mask)
+          d.rounded_rectangle((3, 3, art.width - 4, art.height - 4),
+                              radius=32, fill=255)
+          mask = mask.filter(ImageFilter.GaussianBlur(6))
+          art.putalpha(mask)
           os.makedirs('flutter_customer/assets', exist_ok=True)
-          art.save('flutter_customer/assets/courier_3d.webp', 'WEBP', quality=90)
+          art.save('flutter_customer/assets/courier_3d.webp', 'WEBP', quality=92)
           PY
       - name: Generate Android project files
         working-directory: flutter_customer
