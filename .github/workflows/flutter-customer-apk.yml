@@ -33,14 +33,15 @@ jobs:
           # Isolate the courier, not the whole promotional composition.
           # Original artwork has burgers at far right and pagination dots below.
           # Preserve the red scooter, rider and delivery box.
-          art = art.crop((int(w * .52), int(h * .10), int(w * .81), int(h * .91)))
-          # Transparent rounded-rectangle mask avoids visible rectangular corners.
+          art = art.crop((int(w * .43), int(h * .08), int(w * .87), int(h * .91)))
+          # Soft feathered edge blends with the red background without a hard frame.
           from PIL import ImageDraw, ImageFilter
           mask = Image.new('L', art.size, 0)
           d = ImageDraw.Draw(mask)
-          d.rounded_rectangle((3, 3, art.width - 4, art.height - 4),
-                              radius=32, fill=255)
-          mask = mask.filter(ImageFilter.GaussianBlur(6))
+          inset = max(6, int(art.width * .04))
+          d.rounded_rectangle((inset, inset, art.width-inset, art.height-inset),
+                              radius=int(art.width * .15), fill=255)
+          mask = mask.filter(ImageFilter.GaussianBlur(max(8, int(art.width * .05))))
           art.putalpha(mask)
           os.makedirs('flutter_customer/assets', exist_ok=True)
           art.save('flutter_customer/assets/courier_3d.webp', 'WEBP', quality=92)
