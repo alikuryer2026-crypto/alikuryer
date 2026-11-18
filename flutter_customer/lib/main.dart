@@ -374,11 +374,11 @@ class _CustomerHomeState extends State<CustomerHome> {
               const SizedBox(height: 19),
               const Text('Sevimli taomlaringiz\nendi tez va qulay!',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900,
-                  fontSize: 23, height: 1.15)),
-              const SizedBox(height: 11),
+                  fontSize: 21, height: 1.12)),
+              const SizedBox(height: 8),
               const SizedBox(width: 170, child: Text('Tez yetkazish • Keng tanlov • Ishonchli xizmat',
-                style: TextStyle(color: Colors.white, fontSize: 12, height: 1.4))),
-              const Spacer(),
+                style: TextStyle(color: Colors.white, fontSize: 11, height: 1.25))),
+              const SizedBox(height: 12),
               GestureDetector(onTap: () {
                 if (homeScroll.hasClients) {
                   homeScroll.animateTo(365, duration: const Duration(milliseconds: 450),
