@@ -39,7 +39,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
         Expanded(child: SingleChildScrollView(child: Column(children: [
           if (step == 0) ...[
             const SizedBox(height: 6),
-            const Center(child: AliCourierIllustration(size: 320)),
+            const Center(child: AliCourierIllustration(size: 340)),
             const SizedBox(height: 18),
             const Text('Hamma narsa\nsiz uchun!', textAlign: TextAlign.center,
               style: TextStyle(fontSize: 34, height: 1.1, fontWeight: FontWeight.w900,
@@ -53,23 +53,47 @@ class _AliOnboardingState extends State<AliOnboarding> {
             const SizedBox(height: 10),
             const Text('Ilovadan foydalanish uchun tilni tanlang', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 15),
-            const AliCourierIllustration(size: 145),
-            const SizedBox(height: 10),
+            const AliCourierIllustration(size: 210),
+            const SizedBox(height: 18),
             for (final lang in ['🇺🇿  O‘zbekcha', '🇷🇺  Русский', '🇬🇧  English', '🇨🇳  中文 (简体)'])
-              Padding(padding: const EdgeInsets.only(bottom: 7),
-                child: SizedBox(height: 64, child: AliSectionCard(child: RadioListTile<String>(
-                  dense: true, visualDensity: VisualDensity.compact,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8), title: Text(lang, style: const TextStyle(fontSize: 16)),
-                  value: lang, groupValue: language,
-                  onChanged: (v) => setState(() => language = v ?? language))))),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: InkWell(
+                  onTap: () => setState(() => language = lang),
+                  borderRadius: BorderRadius.circular(24),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    height: 70,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: language == lang ? const Color(0xFFFFF3F4) : Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: language == lang ? const Color(0xFFE50922) : const Color(0xFFE7E7E7),
+                        width: language == lang ? 2 : 1,
+                      ),
+                      boxShadow: const [BoxShadow(color: Color(0x0D000000), blurRadius: 12, offset: Offset(0, 4))],
+                    ),
+                    child: Row(children: [
+                      Text(lang.substring(0, 4), style: const TextStyle(fontSize: 29)),
+                      const SizedBox(width: 15),
+                      Expanded(child: Text(lang.substring(4).trim(),
+                        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800))),
+                      if (language == lang)
+                        const CircleAvatar(radius: 15, backgroundColor: Color(0xFFE50922),
+                          child: Icon(Icons.check, color: Colors.white, size: 21)),
+                    ]),
+                  ),
+                ),
+              ),
           ],
           if (step == 2) ...[
-            const AliCourierIllustration(size: 165),
+            const AliCourierIllustration(size: 235),
             const SizedBox(height: 12),
             const Text('Telefon raqamingizni kiriting', textAlign: TextAlign.center,
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900)),
             const SizedBox(height: 10),
-            const Text('SMS orqali tasdiqlash keyin ulanadi', style: TextStyle(color: Colors.grey)),
+            const Text('Telefon raqamingizni +998 formatida kiriting', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 16),
             TextField(controller: phone, keyboardType: TextInputType.phone,
               decoration: const InputDecoration(prefixText: '+998  ', labelText: 'Telefon raqami',
@@ -104,7 +128,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
         if (step == 0) const Padding(padding: EdgeInsets.only(bottom: 15),
           child: Text('●  ○  ○  ○', style: TextStyle(color: Colors.white, fontSize: 16))),
         AliRedButton(
-          label: step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish' : step == 2 ? 'Ko‘rishni davom ettirish' : 'Ilovani ko‘rish',
+          label: step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish' : step == 2 ? 'Tasdiqlash kodiga o‘tish (demo)' : 'Ilovani ko‘rish',
           icon: Icons.arrow_forward,
           onPressed: step < 3 ? next : widget.onFinish),
         if (step >= 2) TextButton(onPressed: widget.onFinish,
