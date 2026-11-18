@@ -9,10 +9,15 @@ class AliCourierIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     width: size, height: size,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(size * .12),
+    child: ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (bounds) => const RadialGradient(
+        radius: .76,
+        colors: [Colors.white, Colors.white, Colors.transparent],
+        stops: [0, .68, 1],
+      ).createShader(bounds),
       child: Image.asset('assets/courier_3d.webp',
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         filterQuality: FilterQuality.high,
         errorBuilder: (context, error, stackTrace) =>
           CustomPaint(painter: _CourierPainter())),
