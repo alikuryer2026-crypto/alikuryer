@@ -18,6 +18,24 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Prepare 3D courier artwork from existing Alikuryer site asset
+        run: |
+          python3 -m pip install --quiet Pillow
+          python3 - <<'PY'
+          import re, base64, io, os
+          from PIL import Image
+          source = open('docs/index.html', encoding='utf-8').read()
+          match = re.search(r'data:image/webp;base64,([A-Za-z0-9+/=]+)', source)
+          if not match:
+              raise RuntimeError('3D courier artwork missing from docs/index.html')
+          art = Image.open(io.BytesIO(base64.b64decode(match.group(1)))).convert('RGB')
+          w, h = art.size
+          # Crop the rider and scooter from the right-hand half of the
+          # original Alikuryer hero. Excludes the text on the left.
+          art = art.crop((int(w * .49), int(h * .11), int(w * .90), int(h * .99)))
+          os.makedirs('flutter_customer/assets', exist_ok=True)
+          art.save('flutter_customer/assets/courier_3d.webp', 'WEBP', quality=90)
+          PY
       - name: Generate Android project files
         working-directory: flutter_customer
         run: flutter create --platforms=android --project-name alikuryer_customer .
