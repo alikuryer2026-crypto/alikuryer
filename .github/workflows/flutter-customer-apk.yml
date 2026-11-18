@@ -48,6 +48,68 @@ jobs:
       - name: Generate Android project files
         working-directory: flutter_customer
         run: flutter create --platforms=android --project-name alikuryer_customer .
+      - name: Replace Flutter startup logo with Alikuryer native splash
+        working-directory: flutter_customer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont
+          import re
+          root = Path('android/app/src/main/res')
+          drawable = root / 'drawable'
+          drawable.mkdir(parents=True, exist_ok=True)
+          # Transparent white Alikuryer initial, centered inside the Android 12 safe icon zone.
+          icon = Image.new('RGBA', (432, 432), (0, 0, 0, 0))
+          d = ImageDraw.Draw(icon)
+          font_path = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+          font = ImageFont.truetype(font_path, 190)
+          box = d.textbbox((0, 0), 'A', font=font)
+          x = (432 - (box[2] - box[0])) / 2 - box[0]
+          y = (432 - (box[3] - box[1])) / 2 - box[1]
+          d.text((x, y), 'A', font=font, fill='white', stroke_width=2, stroke_fill='white')
+          icon.save(drawable / 'alikuryer_splash_icon.png')
+          # Pre-Android 12 launch screen: red background and centered brand mark.
+          background = '''<?xml version="1.0" encoding="utf-8"?>
+          <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:drawable="#B90019"/>
+            <item>
+              <bitmap android:gravity="center" android:src="@drawable/alikuryer_splash_icon"/>
+            </item>
+          </layer-list>
+          '''
+          for name in ('drawable', 'drawable-v21'):
+              directory = root / name
+              directory.mkdir(parents=True, exist_ok=True)
+              (directory / 'launch_background.xml').write_text(background)
+          # Android 12+ uses the system splash API; override the generated Flutter icon.
+          for name in ('values-v31', 'values-night-v31'):
+              directory = root / name
+              directory.mkdir(parents=True, exist_ok=True)
+              (directory / 'styles.xml').write_text('''<?xml version="1.0" encoding="utf-8"?>
+          <resources>
+            <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+              <item name="android:windowSplashScreenBackground">#B90019</item>
+              <item name="android:windowSplashScreenAnimatedIcon">@drawable/alikuryer_splash_icon</item>
+              <item name="android:windowSplashScreenIconBackgroundColor">#B90019</item>
+              <item name="android:postSplashScreenTheme">@style/NormalTheme</item>
+              <item name="android:windowLightStatusBar">false</item>
+              <item name="android:statusBarColor">#B90019</item>
+            </style>
+            <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+              <item name="android:windowBackground">?android:colorBackground</item>
+            </style>
+          </resources>
+          ''')
+          # Existing generated styles for older devices: set red startup background.
+          for name in ('values', 'values-night'):
+              file = root / name / 'styles.xml'
+              if file.exists():
+                  content = file.read_text()
+                  content = content.replace(
+                    '<item name="android:windowBackground">@drawable/launch_background</item>',
+                    '<item name="android:windowBackground">@drawable/launch_background</item>')
+                  file.write_text(content)
+          PY
       - name: Get dependencies
         working-directory: flutter_customer
         run: flutter pub get
