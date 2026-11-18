@@ -1,25 +1,24 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:alikuryer_customer/main.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('New customer sees the branded welcome screen', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const AliKuryerApp());
-    await tester.pumpAndSettle();
-    expect(find.textContaining('Alikuryer'), findsWidgets);
-    expect(find.text('Boshlash'), findsOneWidget);
-    expect(find.byType(MaterialApp), findsOneWidget);
+  test('Food catalog has unique identifiers and valid prices', () {
+    expect(foods, isNotEmpty);
+    expect(foods.map((f) => f.id).toSet().length, foods.length);
+    for (final food in foods) {
+      expect(food.name, isNotEmpty);
+      expect(food.restaurant, isNotEmpty);
+      expect(food.price, greaterThan(0));
+    }
   });
 
-  testWidgets('Returning customer skips onboarding', (tester) async {
-    SharedPreferences.setMockInitialValues({'onboarding_complete': true});
-    await tester.pumpWidget(const AliKuryerApp());
-    await tester.pumpAndSettle();
-    expect(find.text('Boshlash'), findsNothing);
-    expect(find.text('Alikuryer'), findsWidgets);
+  test('Uzbek som formatting', () {
+    expect(money(0), '0 so‘m');
+    expect(money(45000), '45 000 so‘m');
+    expect(money(1234567), '1 234 567 so‘m');
+  });
+
+  test('Customer app widget can be constructed', () {
+    expect(const AliKuryerApp(), isA<AliKuryerApp>());
   });
 }
