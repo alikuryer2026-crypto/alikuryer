@@ -51,7 +51,8 @@ jobs:
           d.rounded_rectangle((inset, inset, art.width-inset, art.height-inset),
                               radius=int(art.width * .15), fill=255)
           mask = mask.filter(ImageFilter.GaussianBlur(max(12, int(art.width * .08))))
-          # Fade the edges aggressively so background labels cannot appear as a square.\n          art.putalpha(mask)
+          # Fade the edges aggressively so background labels cannot appear as a square.
+          art.putalpha(mask)
           os.makedirs('flutter_customer/assets', exist_ok=True)
           art.save('flutter_customer/assets/courier_3d.webp', 'WEBP', quality=92)
           PY
