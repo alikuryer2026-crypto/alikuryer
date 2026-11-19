@@ -58,6 +58,38 @@ jobs:
       - name: Generate Android project files
         working-directory: flutter_customer
         run: flutter create --platforms=android --project-name alikuryer_customer .
+      - name: Add fallback Maven mirrors for Kotlin and Gradle plugins
+        working-directory: flutter_customer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          settings = Path('android/settings.gradle.kts')
+          if not settings.exists():
+              raise RuntimeError('Expected generated android/settings.gradle.kts')
+          content = settings.read_text()
+          if 'gradlePluginPortal()' not in content:
+              raise RuntimeError('Gradle plugin repository block has changed')
+          content = content.replace(
+              'gradlePluginPortal()',
+              'maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }\n        gradlePluginPortal()',
+              1)
+          if 'mavenCentral()' in content:
+              content = content.replace(
+                  'mavenCentral()',
+                  'maven { url = uri("https://maven-central.storage-download.googleapis.com/maven2/") }\n        mavenCentral()',
+                  1)
+          settings.write_text(content)
+          root_build = Path('android/build.gradle.kts')
+          if root_build.exists():
+              content = root_build.read_text()
+              if 'mavenCentral()' in content:
+                  content = content.replace(
+                      'mavenCentral()',
+                      'maven { url = uri("https://maven-central.storage-download.googleapis.com/maven2/") }\n        mavenCentral()',
+                      1)
+                  root_build.write_text(content)
+          print('Configured Gradle plugin and Maven Central fallback mirrors')
+          PY
       - name: Replace Flutter startup logo with Alikuryer native splash
         working-directory: flutter_customer
         run: |
