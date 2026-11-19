@@ -60,7 +60,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
   Widget headline(String title, String subtitle) => Column(children: [
     Text(title, textAlign: TextAlign.center, style: const TextStyle(
       fontSize: 27, height: 1.12, fontWeight: FontWeight.w900, color: AliPalette.ink)),
-    const SizedBox(height: 9),
+    const SizedBox(height: 7),
     Text(subtitle, textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 14, height: 1.45, color: Colors.black54)),
   ]);
@@ -68,7 +68,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
   Widget languageCard(int i) {
     final selected = language == i;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Material(
         color: selected ? const Color(0xFFFFF2F4) : Colors.white,
         borderRadius: BorderRadius.circular(19),
@@ -76,7 +76,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
           borderRadius: BorderRadius.circular(19),
           onTap: () => setState(() => language = i),
           child: Container(
-            height: 65,
+            height: 61,
             padding: const EdgeInsets.symmetric(horizontal: 17),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(19),
@@ -103,7 +103,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
   }
 
   Widget phoneStep() => Column(children: [
-    courier((MediaQuery.sizeOf(context).height * .31).clamp(200.0, 300.0)),
+    courier((MediaQuery.sizeOf(context).height * .38).clamp(220.0, 340.0)),
     const SizedBox(height: 2),
     headline('Telefon raqamingiz', 'Davom etish uchun telefon raqamingizni kiriting'),
     const SizedBox(height: 18),
@@ -126,7 +126,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
       ),
     ),
     const SizedBox(height: 18),
-    const Text('Yoki boshqa usulda kirish', style: TextStyle(color: Colors.black45)),
+    const Row(children: [Expanded(child: Divider()), Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text('Yoki boshqa usulda kirish', style: TextStyle(color: Colors.black45))), Expanded(child: Divider())]),
     const SizedBox(height: 14),
     Row(children: [
       Expanded(child: OutlinedButton.icon(onPressed: null,
@@ -216,7 +216,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
                 const SizedBox(height: 8),
                 headline('Tilni tanlang', 'O‘zingizga qulay tilni tanlang'),
                 const SizedBox(height: 4),
-                courier((height * .255).clamp(140.0, 230.0)),
+                courier((height * .31).clamp(175.0, 270.0)),
                 const SizedBox(height: 4),
                 for (var i = 0; i < langs.length; i++) languageCard(i),
               ],
