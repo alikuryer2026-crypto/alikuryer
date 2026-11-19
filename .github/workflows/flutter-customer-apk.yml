@@ -18,6 +18,15 @@ jobs:
         with:
           channel: stable
           cache: true
+      - name: Cache Gradle downloads and wrappers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-alikuryer-gradle-${{ hashFiles('flutter_customer/pubspec.lock', 'flutter_customer/android/**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-alikuryer-gradle-
       - name: Prepare 3D courier artwork from existing Alikuryer site asset
         run: |
           python3 -m pip install --quiet Pillow
@@ -125,9 +134,23 @@ jobs:
       - name: Flutter tests
         working-directory: flutter_customer
         run: flutter test
-      - name: Build debug APK for installation testing
+      - name: Build debug APK for installation testing (retry temporary Maven throttling)
         working-directory: flutter_customer
-        run: flutter build apk --debug
+        shell: bash
+        run: |
+          set -o pipefail
+          for attempt in 1 2 3; do
+            echo "Android APK build attempt ${attempt}/3"
+            if flutter build apk --debug; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "APK build failed after three attempts"
+              exit 1
+            fi
+            echo "Build failed; waiting for temporary Maven/Gradle rate limits to clear"
+            sleep $((attempt * 45))
+          done
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
