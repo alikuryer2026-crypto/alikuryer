@@ -48,6 +48,16 @@ class _AliOnboardingState extends State<AliOnboarding> {
 
   Widget courier(double size) => Center(child: AliCourierIllustration(size: size));
 
+  Widget splashArtwork(double height) => SizedBox(
+    height: height,
+    width: double.infinity,
+    child: Stack(fit: StackFit.expand, children: [
+      Positioned.fill(child: CustomPaint(painter: _UzbekSkylinePainter())),
+      Align(alignment: const Alignment(0, 0.10),
+        child: AliCourierIllustration(size: height * 1.02)),
+    ]),
+  );
+
   Widget headline(String title, String subtitle) => Column(children: [
     Text(title, textAlign: TextAlign.center, style: const TextStyle(
       fontSize: 27, height: 1.12, fontWeight: FontWeight.w900, color: AliPalette.ink)),
@@ -191,8 +201,8 @@ class _AliOnboardingState extends State<AliOnboarding> {
             physics: const BouncingScrollPhysics(),
             child: Column(children: [
               if (splash) ...[
-                SizedBox(height: height < 700 ? 10 : 34),
-                courier(height < 700 ? 285 : 355),
+                SizedBox(height: height < 700 ? 6 : 14),
+                splashArtwork((height * .47).clamp(275.0, 480.0)),
                 const SizedBox(height: 20),
                 const Text('Hamma narsa\nsiz uchun!',
                   textAlign: TextAlign.center,
@@ -234,4 +244,46 @@ class _AliOnboardingState extends State<AliOnboarding> {
       ))),
     );
   }
+}
+
+class _UzbekSkylinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = const Color(0x668DD0E0);
+    final glow = Paint()..color = const Color(0x339CE4FF)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 19);
+    canvas.drawCircle(Offset(size.width * .22, size.height * .35),
+      size.width * .28, glow);
+    canvas.drawCircle(Offset(size.width * .79, size.height * .28),
+      size.width * .24, glow);
+    final ground = Paint()..color = const Color(0x668A1027);
+    canvas.drawRect(Rect.fromLTWH(0, size.height * .85, size.width, size.height * .15), ground);
+    for (final x in [.08, .78]) {
+      final left = size.width * x;
+      final top = size.height * .27;
+      canvas.drawRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(left, top, size.width * .095, size.height * .54),
+        const Radius.circular(5)), paint);
+      final spire = Path()
+        ..moveTo(left, top)
+        ..lineTo(left + size.width * .0475, top - size.height * .14)
+        ..lineTo(left + size.width * .095, top)
+        ..close();
+      canvas.drawPath(spire, paint);
+    }
+    final center = Offset(size.width * .24, size.height * .57);
+    final dome = Path()
+      ..moveTo(center.dx - size.width * .19, center.dy)
+      ..quadraticBezierTo(center.dx - size.width * .16, center.dy - size.height * .32,
+        center.dx, center.dy - size.height * .30)
+      ..quadraticBezierTo(center.dx + size.width * .16, center.dy - size.height * .32,
+        center.dx + size.width * .19, center.dy)
+      ..close();
+    canvas.drawPath(dome, Paint()..color = const Color(0x7774C7D8));
+    canvas.drawRect(Rect.fromLTWH(center.dx - size.width * .20, center.dy,
+      size.width * .40, size.height * .27), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
