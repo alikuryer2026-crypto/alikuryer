@@ -163,8 +163,16 @@ class _AliOnboardingState extends State<AliOnboarding> {
     final splash = step == 0;
     final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
-      backgroundColor: splash ? const Color(0xFFB90019) : Colors.white,
-      body: SafeArea(child: Padding(
+      backgroundColor: Colors.white,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: splash ? const LinearGradient(
+            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+            stops: [0, .30, .65, 1],
+            colors: [Color(0xFF171B2E), Color(0xFF54202B),
+              Color(0xFFBA001B), Color(0xFF940013)]) : null,
+          color: splash ? null : Colors.white),
+        child: SafeArea(child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 14),
         child: Column(children: [
           Row(children: [
@@ -184,7 +192,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
             child: Column(children: [
               if (splash) ...[
                 SizedBox(height: height < 700 ? 10 : 34),
-                courier(height < 700 ? 260 : 320),
+                courier(height < 700 ? 285 : 355),
                 const SizedBox(height: 20),
                 const Text('Hamma narsa\nsiz uchun!',
                   textAlign: TextAlign.center,
@@ -223,7 +231,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
             onPressed: widget.onFinish,
             child: const Text('Dizaynni kirishsiz ko‘rish')),
         ]),
-      )),
+      ))),
     );
   }
 }
