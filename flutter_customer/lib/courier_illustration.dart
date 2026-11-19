@@ -12,9 +12,9 @@ class AliCourierIllustration extends StatelessWidget {
     child: ShaderMask(
       blendMode: BlendMode.dstIn,
       shaderCallback: (bounds) => const RadialGradient(
-        radius: .76,
+        radius: .72,
         colors: [Colors.white, Colors.white, Colors.transparent],
-        stops: [0, .68, 1],
+        stops: [0, .55, 1],
       ).createShader(bounds),
       child: Image.asset('assets/courier_3d.webp',
         fit: BoxFit.contain,
