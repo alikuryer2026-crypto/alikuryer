@@ -52,9 +52,8 @@ class _AliOnboardingState extends State<AliOnboarding> {
     height: height,
     width: double.infinity,
     child: Stack(fit: StackFit.expand, children: [
-      Positioned.fill(child: CustomPaint(painter: _UzbekSkylinePainter())),
-      Align(alignment: const Alignment(0, 0.10),
-        child: AliCourierIllustration(size: height * 1.02)),
+      Align(alignment: const Alignment(0, 0.08),
+        child: AliCourierIllustration(size: height * 1.08)),
     ]),
   );
 
@@ -104,10 +103,10 @@ class _AliOnboardingState extends State<AliOnboarding> {
   }
 
   Widget phoneStep() => Column(children: [
-    courier(205),
-    const SizedBox(height: 7),
+    courier((MediaQuery.sizeOf(context).height * .31).clamp(200.0, 300.0)),
+    const SizedBox(height: 2),
     headline('Telefon raqamingiz', 'Davom etish uchun telefon raqamingizni kiriting'),
-    const SizedBox(height: 26),
+    const SizedBox(height: 18),
     TextField(
       controller: phone,
       keyboardType: TextInputType.phone,
@@ -126,9 +125,9 @@ class _AliOnboardingState extends State<AliOnboarding> {
           borderSide: const BorderSide(color: Color(0xFFE6E6E9))),
       ),
     ),
-    const SizedBox(height: 20),
+    const SizedBox(height: 18),
     const Text('Yoki boshqa usulda kirish', style: TextStyle(color: Colors.black45)),
-    const SizedBox(height: 12),
+    const SizedBox(height: 14),
     Row(children: [
       Expanded(child: OutlinedButton.icon(onPressed: null,
         icon: const Icon(Icons.g_mobiledata, size: 28), label: const Text('Google'))),
@@ -136,7 +135,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
       Expanded(child: OutlinedButton.icon(onPressed: null,
         icon: const Icon(Icons.apple), label: const Text('Apple'))),
     ]),
-    const SizedBox(height: 12),
+    const SizedBox(height: 13),
     const Text('Bu dizayn namunasidir. SMS va ijtimoiy kirish keyin ulanadi.',
       textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.black45)),
   ]);
@@ -183,7 +182,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
               Color(0xFFBA001B), Color(0xFF940013)]) : null,
           color: splash ? null : Colors.white),
         child: SafeArea(child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 14),
+        padding: const EdgeInsets.fromLTRB(18, 6, 18, 14),
         child: Column(children: [
           Row(children: [
             if (!splash) IconButton(
@@ -192,7 +191,7 @@ class _AliOnboardingState extends State<AliOnboarding> {
             else const SizedBox(width: 48),
             const Spacer(),
             Text('Alikuryer', style: TextStyle(
-              color: splash ? Colors.white : red, fontSize: 27,
+              color: splash ? Colors.white : red, fontSize: 28,
               fontStyle: FontStyle.italic, fontWeight: FontWeight.w900)),
             const Spacer(),
             const SizedBox(width: 48),
@@ -201,12 +200,12 @@ class _AliOnboardingState extends State<AliOnboarding> {
             physics: const BouncingScrollPhysics(),
             child: Column(children: [
               if (splash) ...[
-                SizedBox(height: height < 700 ? 6 : 14),
-                splashArtwork((height * .47).clamp(275.0, 480.0)),
-                const SizedBox(height: 20),
+                SizedBox(height: height < 700 ? 4 : 10),
+                splashArtwork((height * .54).clamp(300.0, 530.0)),
+                const SizedBox(height: 4),
                 const Text('Hamma narsa\nsiz uchun!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 35, height: 1.1,
+                  style: TextStyle(fontSize: 35, height: 1.08,
                     fontWeight: FontWeight.w900, color: Colors.white)),
                 const SizedBox(height: 12),
                 const Text('Sevimli taomlaringizni tez, qulay va\nishonchli yetkazib beramiz!',
@@ -214,11 +213,11 @@ class _AliOnboardingState extends State<AliOnboarding> {
                   style: TextStyle(color: Colors.white, fontSize: 15, height: 1.5)),
               ],
               if (step == 1) ...[
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 headline('Tilni tanlang', 'O‘zingizga qulay tilni tanlang'),
-                const SizedBox(height: 7),
-                courier(height < 700 ? 110 : 155),
-                const SizedBox(height: 12),
+                const SizedBox(height: 4),
+                courier((height * .255).clamp(140.0, 230.0)),
+                const SizedBox(height: 4),
                 for (var i = 0; i < langs.length; i++) languageCard(i),
               ],
               if (step == 2) phoneStep(),
@@ -232,8 +231,18 @@ class _AliOnboardingState extends State<AliOnboarding> {
           if (splash) const Padding(
             padding: EdgeInsets.only(bottom: 13),
             child: Text('●  ○  ○  ○', style: TextStyle(color: Colors.white))),
-          AliRedButton(
-            label: step == 0 ? 'Boshlash' : step == 1 ? 'Davom etish'
+          if (splash) SizedBox(width: double.infinity, height: 58,
+            child: ElevatedButton(
+              onPressed: advance,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, foregroundColor: red,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25))),
+              child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text('Boshlash', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                SizedBox(width: 16), Icon(Icons.arrow_forward_rounded),
+              ])))
+          else AliRedButton(
+            label: step == 1 ? 'Davom etish'
               : step == 2 ? 'Keyingi qadam (demo)' : 'Ilovani ko‘rish',
             icon: Icons.arrow_forward_rounded,
             onPressed: advance),
